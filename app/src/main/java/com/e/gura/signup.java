@@ -20,6 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e.gura.pages.Home;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -93,9 +94,9 @@ public class signup extends AppCompatActivity {
                     Intent loginIntent ;
                     if(intent.hasExtra("uri")) {
                         loginIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getStringExtra("uri")));
-                        startActivity(new Intent(signup.this,home.class));
+                        startActivity(new Intent(signup.this, Home.class));
                     } else {
-                        loginIntent = new Intent(signup.this,home.class);
+                        loginIntent = new Intent(signup.this, Home.class);
                     }
                     //save users session
                     helper.setUserInfo(response);

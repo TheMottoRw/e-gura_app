@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".pages.Home">
+
+    <RelativeLayout
+        android:id="@+id/rela_imgs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/tvNoInternet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No internet connection"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorApp"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="170dp"
+            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@id/tvNoInternet"/>
+        <TextView
+            android:id="@+id/text_view_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:text="Product categories"
+            android:textColor="#000"
+            android:textSize="15dp"
+            android:layout_below="@id/viewPager"/>
+
+
+        <!--<ScrollView
+            android:id="@+id/horizotnalProdCategory"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:scrollbars="horizontal"
+            android:layout_below="@+id/text_view_result">-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:layout_below="@id/text_view_result"
+            android:scrollbars="horizontal" />
+
+        <TextView
+            android:id="@+id/loading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/recyclerView"
+            android:background="@color/warning"
+            android:shadowColor="@color/light_rose"
+            android:text="Still loading products..."
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/imgLoading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/recyclerView"
+            android:background="@color/white"
+            android:src="@drawable/loading_img"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:id="@+id/scrView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgLoading">
+            <LinearLayout
+                android:id="@+id/lnyViewPorduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <GridLayout
+                    android:id="@+id/grdView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="3"
+                    android:scrollbars="vertical"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/moreToLove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="More to love"
+                    android:textColor="#000"
+                    android:textSize="15dp"
+                    android:layout_below="@id/viewPager"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/gridRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent" />
+
+                <Button
+                    android:id="@+id/loadMore"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/grdView"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="5dp"
+                    android:background="@color/colorApp"
+                    android:drawableStart="@drawable/load_more_24dp"
+                    android:text="More..."
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </ScrollView>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rela_imgs"
+        android:layout_marginTop="5dp"
+        android:text="Powered by E-gura Ltd !"
+        android:textAlignment="center"
+        android:textColor="@color/colorApp" />
+
+</FrameLayout>

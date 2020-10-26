@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_baseline_home_24"
+            android:title="@string/title_home" />
+        <item
+            android:id="@+id/nav_cart"
+            android:icon="@drawable/ic_baseline_add_shopping_cart_24"
+            android:title="@string/title_cart" />
+
+    </group>
+
+    <item android:title="@string/buyandsell">
+        <menu>
+
+            <item
+                android:id="@+id/nav_buy"
+                android:icon="@drawable/ic_baseline_category_24"
+                android:title="@string/buygura" />
+            <item
+                android:id="@+id/nav_sell"
+                android:icon="@drawable/ic_baseline_category_24"
+                android:title="@string/sellgurisha" />
+            <item
+                android:id="@+id/nav_upload"
+                android:icon="@drawable/ic_baseline_category_24"
+                android:title="@string/upload" />
+        </menu>
+    </item>
+
+</menu>

@@ -21,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e.gura.pages.Home;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -143,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                             } else if(intent.hasExtra("profile")){
                                 loginIntent = new Intent(MainActivity.this,Profile.class);
                             } else {
-                                loginIntent = new Intent(MainActivity.this, home.class);
+                                loginIntent = new Intent(MainActivity.this, Home.class);
                             }
                             finish();
                             startActivity(loginIntent);
@@ -188,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                         if (!response.trim().equals("failed")) {
                             helper.setUserInfo(response);
                             Toast.makeText(MainActivity.this, "Password changed,login again...", Toast.LENGTH_LONG).show();
-                            Intent loginIntent = new Intent(MainActivity.this, home.class);
+                            Intent loginIntent = new Intent(MainActivity.this, Home.class);
                             startActivity(loginIntent);
                         } else {
                             Toast.makeText(MainActivity.this, "Failed To Login", Toast.LENGTH_LONG).show();

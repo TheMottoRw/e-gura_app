@@ -1,10 +1,7 @@
-package com.e.gura;
+package com.e.gura.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,22 +9,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.e.gura.Helper;
+import com.e.gura.R;
+import com.e.gura.pages.Home;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
-
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCategoryAdapter.MyViewHolder> {
     public LinearLayout v;
     public Context ctx;
     public Helper helper;
@@ -35,7 +30,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private JSONArray mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(Context context, JSONArray myDataset) {
+    public HorizontalCategoryAdapter(Context context, JSONArray myDataset) {
         mDataset = myDataset;
         ctx = context;
         helper = new Helper(ctx);
@@ -43,8 +38,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
+    public HorizontalCategoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                     int viewType) {
         // create a new view
         v = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.recycler_product_category, parent, false);
@@ -70,7 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             holder.imgCategoryIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ctx,home.class);
+                    Intent intent = new Intent(ctx, Home.class);
                     intent.putExtra("category",holder.tvCategoryId.getText().toString());
                     ctx.startActivity(intent);
 
@@ -109,38 +104,3 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 }
-
-class Background extends AsyncTask<String, Void, Bitmap> {
-    private Bitmap bm;
-    private InputStream is;
-    private BufferedInputStream bis;
-    private Exception exception;
-    private String img;
-
-    protected Bitmap doInBackground(String... urls) {
-        try {
-            URL aURL = new URL(urls[0]);
-            img = urls[1];
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-            return bm;
-        } catch (Exception e) {
-            this.exception = e;
-
-            return null;
-        } finally {
-
-        }
-    }
-
-    protected void onPostExecute(Bitmap feed) {
-        int width = 230, height = 230;
-
-    }
-}
-

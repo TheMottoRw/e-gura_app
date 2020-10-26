@@ -80,6 +80,7 @@
         android:layout_height="match_parent"
         android:src="@drawable/loading_img"
         android:background="@color/white"
+        android:visibility="gone"
         />
     <ScrollView
         android:id="@+id/scrView"
@@ -97,82 +98,11 @@
 
         <ImageView
             android:id="@+id/productMainLogo"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:paddingLeft="10dp"/>
-
-        <LinearLayout
-            android:id="@+id/details"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginLeft="10dp"
-            android:paddingTop="10dp">
+            android:layout_height="200dp"
+            android:paddingLeft="10dp"
+            android:layout_columnSpan="2"/>
 
-            <TextView
-                android:id="@+id/prodName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxWidth="200dp"
-                android:text="Product name"
-                android:textStyle="bold"
-                android:textSize="17dp"/>
-
-            <TextView
-                android:id="@+id/prodPu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:textColor="@color/green"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/prodSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Size: " />
-
-            <TextView
-                android:id="@+id/prodChipping"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Chipping fee " />
-
-            <TextView
-                android:id="@+id/prodColor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Color " />
-
-            <TextView
-                android:id="@+id/tvProdQty"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Quantity" />
-
-            <EditText
-                android:id="@+id/prodQty"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:background="@drawable/texbox"
-                android:hint="item quantity"
-                android:inputType="number"
-                android:padding="5dp"
-                android:text="1"
-                android:textAlignment="center"
-                android:textSize="14dp"/>
-
-            <Button
-                android:id="@+id/btnBuyProduct"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorApp"
-                android:text="Buy"
-                android:textColor="@color/white" />
-        </LinearLayout>
     </GridLayout>
     <GridLayout
         android:layout_width="match_parent"
@@ -191,6 +121,85 @@
             android:layout_width="180dp"
             android:layout_marginLeft="10dp"/>
     </GridLayout>
+            <LinearLayout
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:paddingTop="10dp">
+
+                <TextView
+                    android:id="@+id/prodName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="200dp"
+                    android:text="Product name"
+                    android:textStyle="bold"
+                    android:textSize="20dp"/>
+
+                <TextView
+                    android:id="@+id/prodPu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:text="0 RWF"/>
+
+                <TextView
+                    android:id="@+id/prodSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Size: " />
+
+                <TextView
+                    android:id="@+id/prodColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Color " />
+
+                <TextView
+                    android:id="@+id/prodStock"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Product in stock " />
+
+                <TextView
+                    android:id="@+id/prodChipping"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chipping fee " />
+
+                <TextView
+                    android:id="@+id/tvProdQty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Quantity" />
+
+                <EditText
+                    android:id="@+id/prodQty"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:background="@drawable/texbox"
+                    android:hint="item quantity"
+                    android:inputType="number"
+                    android:padding="5dp"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textSize="14dp"/>
+
+                <Button
+                    android:id="@+id/btnBuyProduct"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorApp"
+                    android:text="Buy"
+                    android:textColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
 </ScrollView>
     <TextView
