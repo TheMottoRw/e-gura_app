@@ -143,6 +143,7 @@ public class Navigator extends AppCompatActivity implements NavigationView.OnNav
             // Handle the camera action
             fragment = new Home();
 
+            bottomNavigationView.setSelectedItemId(R.id.home);
             ft.replace(R.id.frame_container, fragment);
         } else if (id == R.id.nav_cart) {
             fragment = new Cart();

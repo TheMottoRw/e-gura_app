@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -128,8 +132,33 @@ public class Home extends Fragment {
         //Image slider
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         sliderImageArray = new String[7];
+        populateSlider();
 
         return view;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        final EditText edtSearch = activity.findViewById(R.id.edtKeyword);
+
+        edtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().length()>=3) searchInArray(s+"");
+                else if(s.toString().length() == 0) setLoadedProducts("all");
+            }
+        });
     }
 
     public int progressCounter() {
@@ -241,7 +270,7 @@ public class Home extends Fragment {
         mQueue.add(request);
     }
 
-    private void searchInArray() {
+    private void searchInArray(String keyword) {
         searchedProductsArray = new JSONArray();
         if (allProductArray.length() == 0)
             Snackbar.make(loadMore, "No products found", Snackbar.LENGTH_LONG).show();
@@ -250,7 +279,7 @@ public class Home extends Fragment {
             for (int i = 0; i < allProductArray.length(); i++) {
                 try {
                     JSONObject obj = allProductArray.getJSONObject(i);
-                    if (obj.getString("product_name").toLowerCase().contains(loadMore.getText().toString().toLowerCase()) || obj.getString("product_descr").toLowerCase().contains(loadMore.getText().toString().toLowerCase()))
+                    if (obj.getString("product_name").toLowerCase().contains(keyword.toLowerCase()) || obj.getString("product_descr").toLowerCase().contains(keyword))
                         searchedProductsArray.put(obj);
                 } catch (JSONException ex) {
                     Log.d("json err", ex.getMessage());
@@ -272,29 +301,18 @@ public class Home extends Fragment {
 
         ProductAdapter productAdapter = new ProductAdapter(ctx, dataArray);
         gridRecyclerView.setAdapter(productAdapter);
-
-        populateSlider(productsArray);
     }
 
-    private void populateSlider(JSONArray jsonArray) {
-        try {
+    private void populateSlider() {
             String sliderUrl = "https://mobile.e-gura.com/img/";
-            int loopLen = 7;// jsonArray.length() > 7 ? 7 : jsonArray.length();
+            int loopLen = 7;
             for (int i = 1; i <= loopLen; i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-//                if(obj.has("product_profile") && !obj.isNull("product_file"))
                     sliderImageArray[(i-1)] = sliderUrl+i+".jpg";
-//                Toast.makeText(ctx,obj.getString("product_profile"),Toast.LENGTH_SHORT).show();
             }
             loadSlider(sliderImageArray);
-        } catch (JSONException ex) {
-            Log.e("SlideErr",ex.getMessage());
-            ex.printStackTrace();
-        }
     }
 
     private void loadSlider(String[] arr) {
-        Toast.makeText(ctx,arr.toString(),Toast.LENGTH_SHORT).show();
         final SliderAdapter adapterView = new SliderAdapter(ctx, arr);
         mViewPager.setAdapter(adapterView);
         //autoscoll view pager

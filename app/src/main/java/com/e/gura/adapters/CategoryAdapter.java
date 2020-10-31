@@ -63,29 +63,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             //Toast.makeText(ctx,currentObj.getString("cat_name")+"-"+currentObj.getString("cat_id"),Toast.LENGTH_SHORT).show();
             holder.tvCategoryName.setText(currentObj.getString("cat_name"));
             holder.tvCategoryId.setText(currentObj.getString("cat_id"));
-            //set image icons
-//            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
-//            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
-            //set image icons
-            Log.d("CateIcon","https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"));
+
             Glide.with(ctx)
                     .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
                     .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
                     .error(R.drawable.ic_baseline_image_24) //error
                     .into(holder.imgCategoryIcon);
-            Log.d("Category","Image set");
-            // holder.imgCategoryIcon.setImageBitmap(null);
-            holder.imgCategoryIcon.setOnClickListener(new View.OnClickListener() {
+
+            holder.lnlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View v) {
                     Intent intent = new Intent(ctx, Subcategory.class);
                     intent.putExtra("category",holder.tvCategoryId.getText().toString());
                     intent.putExtra("category_name",holder.tvCategoryId.getText().toString());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);
-
-                    //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -112,7 +105,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
 
         public MyViewHolder(LinearLayout lny) {
             super(lny);
-            lnlayout = lny.findViewById(R.id.singleProductHolder1);
+            lnlayout = lny.findViewById(R.id.lnySubcategory);
             imgCategoryIcon = lny.findViewById(R.id.categoryIcon);
             tvCategoryName = lny.findViewById(R.id.categoryName);
             tvCategoryId = lny.findViewById(R.id.categoryId);

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -69,7 +70,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
 //            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
             //set image icons
             Glide.with(ctx)
-                    .load("https://mobile.e-gura.com/img/categoriesa/"+currentObj.getString("cat_icon"))
+                    .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
                     .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
                     .error(R.drawable.ic_baseline_image_24) //error
@@ -93,6 +94,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
                     ctx.startActivity(intent);
 
                     //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();
+                }
+            });
+            holder.lnlayout.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Log.d("ClickDebug","Layout touched");
+                    Toast.makeText(ctx,"Touched",Toast.LENGTH_SHORT).show();
+                    return false;
                 }
             });
 

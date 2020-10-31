@@ -19,6 +19,7 @@ import com.e.gura.Helper;
 import com.e.gura.Navigator;
 import com.e.gura.R;
 import com.e.gura.pages.Home;
+import com.e.gura.pages.Subcategory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -75,7 +76,7 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
             holder.imgCategoryIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ctx, Navigator.class);
+                    Intent intent = new Intent(ctx, Subcategory.class);
                     intent.putExtra("category",holder.tvCategoryId.getText().toString());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);

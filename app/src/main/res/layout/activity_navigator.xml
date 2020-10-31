@@ -27,6 +27,7 @@
                 app:titleTextColor="@color/white">
 
                 <EditText
+                    android:id="@+id/edtKeyword"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="70dp"
@@ -36,7 +37,8 @@
                     android:drawableStart="@drawable/ic_baseline_search_24"
                     android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
                     android:hint="Search"
-                    android:padding="7dp"/>
+                    android:padding="7dp"
+                    android:focusable="true"/>
             </androidx.appcompat.widget.Toolbar>
             <TextView
                 android:id="@+id/line"
