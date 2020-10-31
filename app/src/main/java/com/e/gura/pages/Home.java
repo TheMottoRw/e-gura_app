@@ -18,10 +18,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -75,6 +77,10 @@ public class Home extends Fragment {
     public int len, lastCount = 0, defaultCount = 75, loopStop = 0, page = 0, delay = 1000;
     private String[] sliderImageArray;
     private ViewPager mViewPager;
+    //slider indicator
+    LinearLayout sliderDotspanel;
+    private int dotscount;
+    private ImageView[] dots;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,6 +137,7 @@ public class Home extends Fragment {
 
         //Image slider
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
+        sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
         sliderImageArray = new String[7];
         populateSlider();
 
@@ -315,6 +322,27 @@ public class Home extends Fragment {
     private void loadSlider(String[] arr) {
         final SliderAdapter adapterView = new SliderAdapter(ctx, arr);
         mViewPager.setAdapter(adapterView);
+
+        //dots indicator
+        dotscount = adapterView.getCount();
+        dots = new ImageView[dotscount];
+
+        for(int i = 0; i < dotscount; i++){
+
+            dots[i] = new ImageView(ctx);
+            dots[i].setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.non_active_dot));
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            params.setMargins(8, 0, 8, 0);
+
+            sliderDotspanel.addView(dots[i], params);
+
+        }
+
+        dots[0].setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.active_dot));
+
+
         //autoscoll view pager
 
         handler = new Handler();
@@ -339,6 +367,12 @@ public class Home extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 page = position;
+                for(int i = 0; i< dotscount; i++){
+                    dots[i].setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.non_active_dot));
+                }
+
+                dots[position].setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.active_dot));
+
             }
 
             @Override
