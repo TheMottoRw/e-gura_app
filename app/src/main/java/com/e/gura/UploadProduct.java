@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -64,8 +65,6 @@ public class UploadProduct extends AppCompatActivity {
     private TextView tvNoInternet;
     private Button btnImages, btnUpload;
     private RadioButton radMale, radFemale,radBoth;
-    private ImageView imgUpload;
-    private RelativeLayout rltvLayoutDrawer,rltLayoutLogo;
     private ArrayList dataName = new ArrayList(), dataId = new ArrayList();
 
     String imageEncoded;
@@ -75,6 +74,9 @@ public class UploadProduct extends AppCompatActivity {
     List path = new ArrayList();
     private String encodedImage, encodedImage1, encodeImage2;
 
+    //redesign feature
+    private ImageView goBack;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +84,6 @@ public class UploadProduct extends AppCompatActivity {
         setContentView(R.layout.activity_upload_product);
         helper = new Helper(UploadProduct.this);
         gvGallery = findViewById(R.id.grdView);
-        rltvLayoutDrawer = findViewById(R.id.relativeLayoutGoToProfile);
-        rltLayoutLogo = findViewById(R.id.rltLayoutLogo);
-        imgUpload = findViewById(R.id.imgUpload);
         prgDialog = new ProgressDialog(UploadProduct.this);
         tvNoInternet = findViewById(R.id.tvNoInternet);
 
@@ -102,6 +101,17 @@ public class UploadProduct extends AppCompatActivity {
         btnImages = findViewById(R.id.btnImages);
         btnUpload = findViewById(R.id.btnUpload);
 
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        goBack = findViewById(R.id.goBack);
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         btnImages.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,26 +126,6 @@ public class UploadProduct extends AppCompatActivity {
                 triggerImageUpload();
             }
         });
-        imgUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        rltvLayoutDrawer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                startActivity(new Intent(UploadProduct.this,Profile.class));
-            }
-        });
-        rltLayoutLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        //check internet connectivity
         helper.toggleNetworkConnectivityTextView(tvNoInternet);
         //check if user exist
         checkAuthorization();

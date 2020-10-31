@@ -97,28 +97,29 @@ public class Profile extends AppCompatActivity {
                 startActivity(new Intent(Profile.this,UploadProduct.class));
             }
         });
+        alert.setButton(DialogInterface.BUTTON_POSITIVE, "Update", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if(newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
+                    changePassword();
+                    lny.removeAllViews();
+                    alert.setView(null);
+                    alert.dismiss();
+                }
+                else Toast.makeText(Profile.this,"Password not match",Toast.LENGTH_LONG).show();
+            }
+        });
+        alert.setButton(DialogInterface.BUTTON_NEGATIVE,"Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                alert.dismiss();
+            }
+        });
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                alert.setButton(DialogInterface.BUTTON_POSITIVE, "Update", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if(newPassword.getText().toString().equals(confirmPassword.getText().toString())) {
-                            changePassword();
-                            lny.removeAllViews();
-                            alert.setView(null);
-                            alert.dismiss();
-                        }
-                        else Toast.makeText(Profile.this,"Password not match",Toast.LENGTH_LONG).show();
-                    }
-                });
-                alert.setButton(DialogInterface.BUTTON_NEGATIVE,"Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        alert.dismiss();
-                    }
-                });
+
                 alert.show();
             }
         });

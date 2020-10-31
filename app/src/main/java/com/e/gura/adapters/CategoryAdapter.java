@@ -4,6 +4,7 @@ package com.e.gura.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.e.gura.Helper;
 import com.e.gura.R;
 import com.e.gura.pages.Home;
+import com.e.gura.pages.Subcategory;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,14 +64,25 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
             holder.tvCategoryName.setText(currentObj.getString("cat_name"));
             holder.tvCategoryId.setText(currentObj.getString("cat_id"));
             //set image icons
-            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
-            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
+//            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
+//            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
+            //set image icons
+            Log.d("CateIcon","https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"));
+            Glide.with(ctx)
+                    .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
+                    .centerCrop()
+                    .error(R.drawable.ic_baseline_image_24) //error
+                    .into(holder.imgCategoryIcon);
+            Log.d("Category","Image set");
             // holder.imgCategoryIcon.setImageBitmap(null);
             holder.imgCategoryIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ctx, Home.class);
+                    Intent intent = new Intent(ctx, Subcategory.class);
                     intent.putExtra("category",holder.tvCategoryId.getText().toString());
+                    intent.putExtra("category_name",holder.tvCategoryId.getText().toString());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);
 
                     //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();
@@ -92,7 +107,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView tvCategoryName,tvCategoryId;
-        public ImageView imgCategoryIcon;
+        public CircularImageView imgCategoryIcon;
         public LinearLayout lnlayout;
 
         public MyViewHolder(LinearLayout lny) {

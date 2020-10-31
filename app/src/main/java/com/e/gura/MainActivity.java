@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView resp, tvNoInternet;
     private Helper helper;
     private Intent intent;
-    private RelativeLayout loginLayout, resetLayout,rltLayoutLogo,rltLayoutMenu;
+    private RelativeLayout loginLayout, resetLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,20 +46,6 @@ public class MainActivity extends AppCompatActivity {
         sgnup = (Button) findViewById(R.id.newaccountss);
         resp = (TextView) findViewById(R.id.resp_view);
         forgot = findViewById(R.id.forgot);
-        rltLayoutLogo = findViewById(R.id.rltLayoutLogo);
-        rltLayoutMenu = findViewById(R.id.rltLayoutMenu);
-        rltLayoutLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        rltLayoutMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         //reset password
         edtResetPhone = findViewById(R.id.resetPhone);
         btnResetButton = findViewById(R.id.resetButton);
@@ -143,15 +129,18 @@ public class MainActivity extends AppCompatActivity {
                                 loginIntent = new Intent(MainActivity.this, UploadProduct.class);
                             } else if(intent.hasExtra("profile")){
                                 loginIntent = new Intent(MainActivity.this,Profile.class);
+                                loginIntent.putExtra("profile","");
+                            } else if(intent.hasExtra("cart")){
+                                loginIntent = new Intent(MainActivity.this,ProductInfo.class);
+                                loginIntent.putExtra("product",getIntent().getStringExtra("product"));
                             } else {
-                                loginIntent = new Intent(MainActivity.this, Home.class);
+                                loginIntent = new Intent(MainActivity.this, Navigator.class);
                             }
                             finish();
                             startActivity(loginIntent);
                         } else {
                             Toast.makeText(getApplicationContext(), "Failed to login", Toast.LENGTH_LONG).show();
                         }
-
                     }
                 }, new Response.ErrorListener() {
                     @Override

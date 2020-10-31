@@ -68,7 +68,7 @@ public class Home extends Fragment {
     private Activity activity;
     public Runnable runnable;
     public Handler handler;
-    public int len, lastCount = 0, defaultCount = 75, loopStop = 0, page = 0, delay = 5000;
+    public int len, lastCount = 0, defaultCount = 75, loopStop = 0, page = 0, delay = 1000;
     private String[] sliderImageArray;
     private ViewPager mViewPager;
 
@@ -153,6 +153,9 @@ public class Home extends Fragment {
             case "product_based_category":
                 url = "https://e-gura.com/js/ajax/main.php?categories_products=" + id;
                 loadProductsToSearchIn();//loading products used to search in
+                break;
+            case "product_based_subcategory":
+                url = "https://mobile.e-gura.com/main/view.php?andr_sub_categories_on_cat&category=2";
                 break;
             case "search":
                 progressBar.setMessage("Searching...");
@@ -275,15 +278,14 @@ public class Home extends Fragment {
 
     private void populateSlider(JSONArray jsonArray) {
         try {
-            int loopLen = jsonArray.length() > 7 ? 7 : jsonArray.length();
-            Toast.makeText(ctx,"Limit len "+loopLen,Toast.LENGTH_SHORT).show();
-            for (int i = 0; i < loopLen; i++) {
+            String sliderUrl = "https://mobile.e-gura.com/img/";
+            int loopLen = 7;// jsonArray.length() > 7 ? 7 : jsonArray.length();
+            for (int i = 1; i <= loopLen; i++) {
                 JSONObject obj = jsonArray.getJSONObject(i);
 //                if(obj.has("product_profile") && !obj.isNull("product_file"))
-                    sliderImageArray[i] = obj.getString("product_file");
+                    sliderImageArray[(i-1)] = sliderUrl+i+".jpg";
 //                Toast.makeText(ctx,obj.getString("product_profile"),Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(ctx,"Slide len "+sliderImageArray.toString(),Toast.LENGTH_SHORT).show();
             loadSlider(sliderImageArray);
         } catch (JSONException ex) {
             Log.e("SlideErr",ex.getMessage());
@@ -329,6 +331,7 @@ public class Home extends Fragment {
     }
 
     private void loadCategories() {
+        final Bundle bundle = getArguments();
         String url = "https://e-gura.com/js/ajax/main.php?all_products_categories";
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -339,9 +342,10 @@ public class Home extends Fragment {
                         try {
                             //load all products
                             // Toast.makeText(home.this,String.valueOf(getIntent().hasExtra("category")),Toast.LENGTH_SHORT).show();
-//                            if (getArguments().hasExtra("category"))
-//                                setProductsUrl("product_based_category", getIntent().getStringExtra("category"));
-//                            else setProductsUrl("all", "0");
+                            if (    bundle!= null)
+                                if(!bundle.getString("subcategory","0").equals("0"))
+                                    setProductsUrl("product_based_category", bundle.getString("subcategory"));
+                            else setProductsUrl("all", "0");
 
                             //set products' category to recyclerview
                             adapter = new HorizontalCategoryAdapter(ctx, response.getJSONArray("all_categories"));

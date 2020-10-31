@@ -8,15 +8,6 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_navigation"
-        app:menu="@menu/activity_navigation_drawer" />
-
 <!--    <ScrollView-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content">-->
@@ -25,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -43,7 +35,7 @@
                     android:paddingBottom="5dp"
                     android:drawableStart="@drawable/ic_baseline_search_24"
                     android:drawableEnd="@drawable/ic_baseline_arrow_forward_ios_24"
-                    android:hint="Type keyword to search"
+                    android:hint="Search"
                     android:padding="7dp"/>
             </androidx.appcompat.widget.Toolbar>
             <TextView
@@ -60,7 +52,9 @@
                 android:id="@+id/frame_container"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:layout_below="@id/line" />
+                android:layout_below="@id/line"
+                >
+            </FrameLayout>
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
                 android:id="@+id/bottom_navigation"
@@ -72,5 +66,15 @@
                 app:menu="@menu/bottom_navigation"
                 app:labelVisibilityMode="labeled"/>
         </RelativeLayout>
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_navigation"
+        app:menu="@menu/activity_navigation_drawer" />
 <!--    </ScrollView>-->
 </androidx.drawerlayout.widget.DrawerLayout>

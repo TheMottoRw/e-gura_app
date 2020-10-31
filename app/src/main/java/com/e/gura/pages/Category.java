@@ -19,12 +19,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.e.gura.Helper;
 import com.e.gura.adapters.CategoryAdapter;
 import com.e.gura.adapters.HorizontalCategoryAdapter;
 import com.e.gura.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,7 +52,7 @@ public class Category extends Fragment {
         ctx = view.getContext();
         recyclerView = view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(ctx);
-
+        recyclerView.setLayoutManager(layoutManager);
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -64,17 +66,20 @@ public class Category extends Fragment {
     }
 
     private void loadCategories() {
-        String url = "https://e-gura.com/js/ajax/main.php?all_products_categories";
+        String url = "https://mobile.e-gura.com/main/view.php?andr_categories_list";
+        Log.d("RequestStart",url);
         mQueue = Volley.newRequestQueue(ctx);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        StringRequest request = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        //Log.d("response", response.toString());
+                    public void onResponse(String response) {
+                        Log.d("response", response.toString());
                         //Log.e("escaper", res.replace("\\", ""));
                         try {
+                            Log.d("Category","Set adapter");
                             //set products' category to recyclerview
-                            adapter = new CategoryAdapter(ctx, response.getJSONArray("all_categories"));
+                            JSONArray arr = new JSONArray(response);
+                            adapter = new CategoryAdapter(ctx, arr);
                             recyclerView.setAdapter(adapter);
                             // progressBar.dismiss();
                         } catch (JSONException e) {

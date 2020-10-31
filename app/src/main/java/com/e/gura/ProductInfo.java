@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -55,11 +56,23 @@ public class ProductInfo extends AppCompatActivity {
     private ImageView imgUpload,img1,img2,img3;
     private GifImageView imgLoading;
     private RelativeLayout rltLayoutLogo,relativeLayoutGoToProfile;
-
+    //redesign feature
+    private ImageView goBack;
+    private TextView toCart;
+    private Button btnAddToCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
+        //Redesign feature
+        //Customer toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        goBack = findViewById(R.id.goBack);
+        toCart = findViewById(R.id.toCart);
+        btnAddToCart = findViewById(R.id.btnAddToCart);
+
+        //end redesign feature
         helper = new Helper(ProductInfo.this);
 
         tvNoInternet = findViewById(R.id.tvNoInternet);
@@ -87,6 +100,42 @@ public class ProductInfo extends AppCompatActivity {
         progressDialog.setCancelable(true);
 
         data = getIntent();
+        btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(prodQty.getText().toString().trim().equals("") || prodQty.getText().toString().trim().equals("0"))
+                    Snackbar.make(prodQty,"Quantity should be a number greater than 0",Snackbar.LENGTH_LONG).show();
+                else {
+                    try {
+                        JSONObject obj = new JSONObject(data.getStringExtra("product"));
+                        if(!helper.getUserId().equals("0")) addToCart(obj.getString("product_id"), prodQty.getText().toString().trim());
+                        else{
+                            Intent intent = new Intent(ProductInfo.this,MainActivity.class);
+                            intent.putExtra("product", data.getStringExtra("product"));
+                            intent.putExtra("cart", "login");
+                            startActivity(intent);
+                        }
+                    }catch (JSONException ex){
+
+                    }
+                }
+            }
+        });
+        toCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductInfo.this,Navigator.class);
+                intent.putExtra("cart","go to cart");
+                startActivity(intent);
+            }
+        });
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         btnBuyProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -119,9 +168,9 @@ public class ProductInfo extends AppCompatActivity {
             JSONObject obj = new JSONObject(data.getStringExtra("product"));
             prodName.setText(obj.getString("product_name"));
             prodPu.setText(obj.getString("product_price")+" RWF");
-            prodChipping.setText("Shipping fee: " + obj.getString("product_chipping"));
-            prodColor.setText("Color: " + obj.getString("product_color"));
-            prodSize.setText("Size:" + obj.getString("product_size"));
+            prodChipping.setText( obj.getString("product_chipping"));
+            prodColor.setText(obj.getString("product_color"));
+            prodSize.setText(obj.getString("product_size"));
             img = new ImageView[]{};
             //show loading products
            // loading.setVisibility(View.VISIBLE);
@@ -131,21 +180,21 @@ public class ProductInfo extends AppCompatActivity {
             imgLoading.setVisibility(View.GONE);
             Glide.with(ProductInfo.this)
                     .load(obj.getString("product_file"))
-                    .placeholder(R.drawable.logo_egura) //placeholder
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
-                    .error(R.drawable.logo_egura) //error
+                    .error(R.drawable.ic_baseline_image_24) //error
                     .into(img1);
             Glide.with(ProductInfo.this)
                     .load(obj.getString("product_file_2"))
-                    .placeholder(R.drawable.logo_egura) //placeholder
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
-                    .error(R.drawable.logo_egura) //error
+                    .error(R.drawable.ic_baseline_image_24) //error
                     .into(img2);
             Glide.with(ProductInfo.this)
                     .load(obj.getString("product_file_3"))
-                    .placeholder(R.drawable.logo_egura) //placeholder
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
-                    .error(R.drawable.logo_egura) //error
+                    .error(R.drawable.ic_baseline_image_24) //error
                     .into(img3);
 
                 /*for (int i = 0; i < 3; i++) {
@@ -212,5 +261,38 @@ public class ProductInfo extends AppCompatActivity {
         } catch (JSONException ex) {
 
         }
+    }
+    public void addToCart(String product,String quantity){
+        String url = "https://mobile.e-gura.com/js/ajax/main.php?and_2_add_to_cart&prid="+product+"&prqnntty="+quantity;
+        Log.d("add to cart","URL "+url);
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.d("add to cart","Response "+response);
+                if(response.equals("login")){
+                    //redirect to login page
+                    Intent intent = new Intent(ProductInfo.this,MainActivity.class);
+                    intent.putExtra("action","login");
+                    startActivity(intent);
+                }else if(response.equals("success")) Toast.makeText(getApplicationContext(),"Product added to cart",Toast.LENGTH_LONG).show();
+                else Toast.makeText(getApplicationContext(),"Failed to add product to cart",Toast.LENGTH_LONG).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("request error",error.getMessage());
+                //Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }

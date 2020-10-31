@@ -3,6 +3,7 @@ package com.e.gura.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.e.gura.Helper;
+import com.e.gura.Navigator;
 import com.e.gura.R;
 import com.e.gura.pages.Home;
 
@@ -59,14 +62,22 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
             holder.tvCategoryName.setText(currentObj.getString("cat_name"));
             holder.tvCategoryId.setText(currentObj.getString("cat_id"));
             //set image icons
-            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
-            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
-           // holder.imgCategoryIcon.setImageBitmap(null);
+//            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
+//            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
+            Log.d("CateIcon","https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"));
+            Glide.with(ctx)
+                    .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
+                    .centerCrop()
+                    .error(R.drawable.ic_baseline_image_24) //error
+                    .into(holder.imgCategoryIcon);
+            // holder.imgCategoryIcon.setImageBitmap(null);
             holder.imgCategoryIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ctx, Home.class);
+                    Intent intent = new Intent(ctx, Navigator.class);
                     intent.putExtra("category",holder.tvCategoryId.getText().toString());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);
 
                   //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();

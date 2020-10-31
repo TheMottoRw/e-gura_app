@@ -6,6 +6,7 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/lnySubcategory"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="horizontal">
@@ -24,7 +25,7 @@
             android:id="@+id/categoryIcon"
             android:layout_width="80dp"
             android:layout_height="match_parent"
-            android:src="@drawable/girl_marketing"/>
+            />
 
         <TextView
             android:id="@+id/categoryName"

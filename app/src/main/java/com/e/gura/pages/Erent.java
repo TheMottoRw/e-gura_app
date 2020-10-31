@@ -1,14 +1,16 @@
 package com.e.gura.pages;
 
+import android.app.Fragment;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.e.gura.R;
 
@@ -46,8 +48,15 @@ public class Erent extends Fragment {
         // Geo location settings
         settings.setGeolocationEnabled(true);
         settings.setGeolocationDatabasePath("/data/data/gura");
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                return false;//super.shouldOverrideUrlLoading(view, request);
+            }
+        });
 
         webView.loadUrl("https://e-gura.com/e-rent/index.php");
+
         return view;
     }
 }

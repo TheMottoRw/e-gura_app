@@ -3,62 +3,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".UploadProduct"
     android:background="@color/white">
-    <RelativeLayout
-        android:id="@+id/tophead"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@drawable/bg">
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
         <RelativeLayout
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/bell" />
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutGoToProfile"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/vector" />
-
-        <ImageView
-            android:id="@+id/imgUpload"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginRight="20dp"
-            android:layout_toLeftOf="@id/relativeLayoutGoToProfile"
-            android:src="@drawable/upload_24dp" />
-
-        <RelativeLayout
-            android:id="@+id/rltLayoutLogo"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/logo_egura" />
-
-        <TextView
-            android:id="@+id/tvNoInternet"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/rltLayoutLogo"
-            android:layout_marginTop="-5dp"
-            android:text="No internet connection"
-            android:textColor="@color/colorApp"
-            android:paddingLeft="10dp"
-            android:visibility="gone" />
-    </RelativeLayout>
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/goBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotationY="180"
+                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+    <TextView
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toolbar_design"
+        android:text="."
+        android:textColor="@color/darkgrey"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="-5dp"/>
+    <TextView
+        android:id="@+id/tvNoInternet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rltLayoutLogo"
+        android:layout_marginTop="-5dp"
+        android:text="No internet connection"
+        android:textColor="@color/colorApp"
+        android:paddingLeft="10dp"
+        android:visibility="gone" />
     <GridView
         android:id="@+id/grdView"
         android:layout_width="match_parent"

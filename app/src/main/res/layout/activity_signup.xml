@@ -8,32 +8,48 @@
     android:background="#fff">
 
     <RelativeLayout
+        android:id="@+id/tophead"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@drawable/bg"
-        android:id="@+id/tophead">
-        <RelativeLayout
-            android:id="@+id/rltLayoutMenu"
-            android:layout_width="25dp"
-            android:layout_height="20dp"
-            android:background="@drawable/vector"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            />
-        <RelativeLayout
-            android:id="@+id/rltLayoutLogo"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/logo_egura"
-            />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/goBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:rotationY="180"
+                    android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:text="@string/app_name"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="50dp"/>
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:background="@drawable/toolbar_design"
+            android:text="."
+            android:textColor="@color/darkgrey"
+            android:layout_below="@id/toolbar"/>
     </RelativeLayout>
+
     <ScrollView
         android:id="@+id/scrlView"
         android:layout_width="match_parent"
@@ -46,12 +62,28 @@
         android:padding="30dp"
         >
         <TextView
+            android:id="@+id/signintext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create an account to continue"
-            android:textColor="#000"
+            android:text="Register"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:background="@color/colorApp"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:paddingBottom="10dp"
+            android:layout_marginTop="-10dp"
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:id="@+id/btnSignin"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_toRightOf="@id/signintext"
+            android:text="Signin"
+            android:textColor="@color/black"
             android:textSize="20dp"
-            android:id="@+id/signintext"
+            android:layout_marginLeft="30dp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -124,7 +156,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:background="@drawable/btn"
-            android:text="Sign Up"
+            android:text="Register"
             android:textColor="#ffffff"
             android:layout_below="@+id/cpasswordinput"
             android:layout_marginTop="30dp"

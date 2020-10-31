@@ -31,7 +31,7 @@ public class signup extends AppCompatActivity {
     TextView sgnview;
     private Intent intent;
     private Helper helper;
-    private RelativeLayout rltvLayoutLogo,rltvLayoutMenu;
+    private RelativeLayout rltvLayoutLogo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,21 +44,6 @@ public class signup extends AppCompatActivity {
         npass = (EditText) findViewById(R.id.passwordinput);
         cpass = (EditText) findViewById(R.id.cpasswordinput);
         sgnview = (TextView) findViewById(R.id.acc_login);
-        rltvLayoutMenu = findViewById(R.id.rltLayoutMenu);
-        rltvLayoutLogo = findViewById(R.id.rltLayoutLogo);
-
-        rltvLayoutLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        rltvLayoutMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
         helper = new Helper(signup.this);
         sngBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -5,11 +5,17 @@
     android:layout_height="match_parent"
     android:background="@color/grey"
     tools:context=".pages.Home">
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/rela_imgs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
         android:padding="5dp">
 
@@ -29,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="170dp"
             android:layout_margin="10dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="0dp"
             android:layout_below="@id/tvNoInternet"/>
         <TextView
             android:id="@+id/text_view_result"
@@ -130,16 +136,15 @@
                     android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
-
     </RelativeLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rela_imgs"
-        android:layout_marginTop="5dp"
-        android:text="Powered by E-gura Ltd !"
-        android:textAlignment="center"
-        android:textColor="@color/colorApp" />
-
+    </ScrollView>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Powered by E-gura Ltd !"
+            android:textAlignment="center"
+            android:textColor="@color/colorApp"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
 </FrameLayout>

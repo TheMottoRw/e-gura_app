@@ -1,86 +1,95 @@
 package com.e.gura.adapters;
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.e.gura.Helper;
-import com.e.gura.ProductInfo;
+import com.e.gura.Navigator;
 import com.e.gura.R;
+import com.e.gura.pages.Home;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
+public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.MyViewHolder> {
     public LinearLayout v;
     public Context ctx;
     public Helper helper;
     public JSONObject readStatusSymbol = new JSONObject();
     private JSONArray mDataset;
-    private GridLayout gridLayout;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public ProductAdapter(Context context, JSONArray myDataset) {
+    public SubCategoryAdapter(Context context, JSONArray myDataset) {
         mDataset = myDataset;
         ctx = context;
         helper = new Helper(ctx);
-//        gridLayout = grdLayout;
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent,int viewType) {
+    public SubCategoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                                           int viewType) {
         // create a new view
         v = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_products, parent, false);
-        ProductAdapter.MyViewHolder vh = new ProductAdapter.MyViewHolder(v);
+                .inflate(R.layout.recycler_categories, parent, false);
+        SubCategoryAdapter.MyViewHolder vh = new SubCategoryAdapter.MyViewHolder(v);
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onBindViewHolder(final ProductAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(final SubCategoryAdapter.MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         try {
-            final JSONObject currentObj = mDataset.getJSONObject(position);
-            String productDescription = currentObj.getString("product_descr").length()>16?currentObj.getString("product_descr").replaceAll("\r\n"," ").replaceAll("\n"," ").substring(0,14)+"...":currentObj.getString("product_descr");
-            String productQuantity = currentObj.getString("product_qnty");
+            JSONObject currentObj = mDataset.getJSONObject(position);
             //Toast.makeText(ctx,currentObj.getString("cat_name")+"-"+currentObj.getString("cat_id"),Toast.LENGTH_SHORT).show();
-            holder.tvProductId.setText(currentObj.getString("product_id"));
-            holder.tvProductName.setText(currentObj.getString("product_name"));
-            holder.tvProductDescription.setText(productDescription);
-            holder.tvProductPrice.setText("RWF "+currentObj.getString("product_price"));
-            holder.tvProductSoldQuantity.setText(getSoldQuantity(Integer.parseInt(productQuantity))+" sold in "+productQuantity);
+            holder.tvCategoryName.setText(currentObj.getString("sub_cat_name"));
+            holder.tvCategoryId.setText(currentObj.getString("sub_cat_id"));
+            //set image icons
+//            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
+//            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
             //set image icons
             Glide.with(ctx)
-                    .load(currentObj.getString("product_file"))
+                    .load("https://mobile.e-gura.com/img/categoriesa/"+currentObj.getString("cat_icon"))
                     .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
                     .error(R.drawable.ic_baseline_image_24) //error
-                        .into(holder.imageIcon);
+                    .into(holder.imgCategoryIcon);
+            holder.tvCategoryName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("ClickDebug","Debug in adapter");
+                    Toast.makeText(ctx,"Opening modal",Toast.LENGTH_SHORT).show();
+                }
+            });
             // holder.imgCategoryIcon.setImageBitmap(null);
-            holder.imageIcon.setOnClickListener(new View.OnClickListener() {
+            holder.lnlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(ctx, ProductInfo.class);
-                    intent.putExtra("product",currentObj.toString());
+                    Toast.makeText(ctx,"Open filter",Toast.LENGTH_SHORT).show();
+                    Log.d("ClickDebug","Debug in adapter");
+                    Intent intent = new Intent(ctx, Navigator.class);
+                    intent.putExtra("subcategory",holder.tvCategoryId.getText().toString());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
                     ctx.startActivity(intent);
 
                     //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();
@@ -104,29 +113,18 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     // you provide access to all the views for a data item in a view holder
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView tvProductId,tvProductName,tvProductDescription,tvProductPrice,tvProductSoldQuantity;
-        public ImageView imageIcon;
+        public TextView tvCategoryName,tvCategoryId;
+        public CircularImageView imgCategoryIcon;
         public LinearLayout lnlayout;
 
         public MyViewHolder(LinearLayout lny) {
             super(lny);
-            lnlayout = lny.findViewById(R.id.lnyProductItem);
-            imageIcon = lny.findViewById(R.id.imgx);
-            tvProductId = lny.findViewById(R.id.tvProductId);
-            tvProductName = lny.findViewById(R.id.tvProductName);
-            tvProductDescription = lny.findViewById(R.id.tvProductDescription);
-            tvProductPrice = lny.findViewById(R.id.tvProductPrice);
-            tvProductSoldQuantity = lny.findViewById(R.id.tvProductSoldQuantity);
+            lnlayout = lny.findViewById(R.id.lnySubcategory);
+            imgCategoryIcon = lny.findViewById(R.id.categoryIcon);
+            tvCategoryName = lny.findViewById(R.id.categoryName);
+            tvCategoryId = lny.findViewById(R.id.categoryId);
+            //tvMsg = lny.findViewById(R.id.tvRecyclerDate);
         }
-    }
-    public static int getSoldQuantity(int soldQuantity) {
-        int max = Integer.parseInt(String.valueOf(soldQuantity/2));
-        int min = Integer.parseInt(String.valueOf(soldQuantity/10));
-        if (min > max) {
-            throw new IllegalArgumentException("Min " + min + " greater than max " + max);
-        }
-        return (int) ( (long) min + Math.random() * ((long)max - min + 1));
     }
 }
-
 

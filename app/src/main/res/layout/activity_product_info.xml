@@ -3,15 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".ProductInfo"
-    android:background="@color/white">
+    tools:context=".ProductInfo">
 
     <RelativeLayout
         android:id="@+id/tophead"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:background="@drawable/bg">
+        android:background="@drawable/bg"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="20dp"
@@ -31,14 +32,15 @@
             android:layout_marginTop="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/vector" />
+
         <ImageView
             android:id="@+id/imgUpload"
             android:layout_width="35dp"
             android:layout_height="33dp"
-            android:src="@drawable/upload_24dp"
-            android:layout_toLeftOf="@id/relativeLayoutGoToProfile"
             android:layout_marginRight="20dp"
-            />
+            android:layout_toLeftOf="@id/relativeLayoutGoToProfile"
+            android:src="@drawable/upload_24dp" />
+
         <RelativeLayout
             android:id="@+id/rltLayoutLogo"
             android:layout_width="100dp"
@@ -52,162 +54,291 @@
             android:id="@+id/tvNoInternet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No internet connection"
             android:layout_below="@+id/rltLayoutLogo"
             android:layout_marginTop="-3dp"
-            android:textColor="@color/colorApp"
             android:paddingLeft="10dp"
-            android:visibility="gone"/>
+            android:text="No internet connection"
+            android:textColor="@color/colorApp"
+            android:visibility="gone" />
     </RelativeLayout>
-    <!--Product details-->
-<!-- loading products -->
-    <TextView
-        android:id="@+id/loading"
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/recyclerView"
-        android:text="Loading products images..."
-        android:background="@color/warning"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:textAlignment="center"
-        android:shadowColor="@color/light_rose"
-        android:visibility="gone"/>
+        android:background="@color/white">
 
-    <pl.droidsonroids.gif.GifImageView
-        android:id="@+id/imgLoading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/loading_img"
-        android:background="@color/white"
-        android:visibility="gone"
-        />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/goBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotationY="180"
+                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+
+            <TextView
+                android:id="@+id/toCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/ic_baseline_add_shopping_cart_24" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+
     <ScrollView
         android:id="@+id/scrView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
-    <GridLayout
-        android:id="@+id/grdProdDetail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2">
 
-        <ImageView
-            android:id="@+id/productMainLogo"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:paddingLeft="10dp"
-            android:layout_columnSpan="2"/>
-
-    </GridLayout>
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="2">
-
-        <ImageView
-            android:id="@+id/img2"
-            android:layout_height="200dp"
-            android:layout_width="180dp"
-            android:layout_marginLeft="10dp"/>
-
-        <ImageView
-            android:id="@+id/img3"
-            android:layout_height="200dp"
-            android:layout_width="180dp"
-            android:layout_marginLeft="10dp"/>
-    </GridLayout>
-            <LinearLayout
-                android:id="@+id/details"
+            <TextView
+                android:id="@+id/line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginLeft="10dp"
-                android:paddingTop="10dp">
+                android:layout_below="@id/toolbar"
+                android:layout_marginTop="-5dp"
+                android:background="@drawable/toolbar_design"
+                android:text="."
+                android:textColor="@color/darkgrey" />
+            <!--Product details-->
+            <!-- loading products -->
+            <TextView
+                android:id="@+id/loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/recyclerView"
+                android:background="@color/warning"
+                android:shadowColor="@color/light_rose"
+                android:text="Loading products images..."
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/prodName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="200dp"
-                    android:text="Product name"
-                    android:textStyle="bold"
-                    android:textSize="20dp"/>
+            <pl.droidsonroids.gif.GifImageView
+                android:id="@+id/imgLoading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:src="@drawable/loading_img"
+                android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/prodPu"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <GridLayout
+                    android:id="@+id/grdProdDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20dp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold"
-                    android:text="0 RWF"/>
+                    android:columnCount="2">
 
-                <TextView
-                    android:id="@+id/prodSize"
+                    <ImageView
+                        android:id="@+id/productMainLogo"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_columnSpan="2"
+                        android:paddingLeft="10dp" />
+
+                </GridLayout>
+
+                <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Size: " />
+                    android:columnCount="2">
 
-                <TextView
-                    android:id="@+id/prodColor"
+                    <ImageView
+                        android:id="@+id/img2"
+                        android:layout_width="180dp"
+                        android:layout_height="200dp"
+                        android:layout_marginLeft="10dp" />
+
+                    <ImageView
+                        android:id="@+id/img3"
+                        android:layout_width="180dp"
+                        android:layout_height="200dp"
+                        android:layout_marginLeft="10dp" />
+                </GridLayout>
+
+                <LinearLayout
+                    android:id="@+id/details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Color " />
+                    android:layout_marginLeft="10dp"
+                    android:orientation="vertical"
+                    android:paddingTop="10dp"
+                    android:paddingLeft="40dp">
 
-                <TextView
-                    android:id="@+id/prodStock"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Product in stock " />
+                    <TextView
+                        android:id="@+id/prodName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="200dp"
+                        android:text="Product name"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/prodChipping"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Chipping fee " />
+                    <TextView
+                        android:id="@+id/prodPu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="0 RWF"
+                        android:textColor="@color/black"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvProdQty"
-                    android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/tvProdSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Size: "
+                        android:textColor="@color/black"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/prodSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_toRightOf="@id/tvProdSize"
+                        android:layout_marginLeft="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvProdColor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Color "
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_below="@id/tvProdSize"/>
+                    <TextView
+                        android:id="@+id/prodColor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_below="@id/prodSize"
+                        android:layout_toRightOf="@id/tvProdColor"/>
+
+                    <TextView
+                        android:id="@+id/tvProdStock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Product in stock "
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_below="@id/prodColor"/>
+
+                    <TextView
+                        android:id="@+id/prodStock"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:layout_marginLeft="10dp"
+                        android:layout_toRightOf="@id/tvProdStock"
+                        android:layout_below="@id/tvProdColor"/>
+
+                    <TextView
+                        android:id="@+id/tvProdChipping"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chipping fee: "
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_below="@id/tvProdStock"/>
+                    <TextView
+                        android:id="@+id/prodChipping"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 RWF "
+                        android:layout_below="@id/prodStock"
+                        android:layout_toRightOf="@id/tvProdChipping"/>
+
+                    <TextView
+                        android:id="@+id/tvProdQty"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Quantity"
+                        android:layout_below="@id/tvProdChipping"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                    <EditText
+                        android:id="@+id/prodQty"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:background="@drawable/texbox"
+                        android:hint="item quantity"
+                        android:inputType="number"
+                        android:padding="5dp"
+                        android:text="1"
+                        android:textAlignment="center"
+                        android:textSize="14dp"
+                        android:layout_below="@id/tvProdChipping"
+                        android:layout_toRightOf="@id/tvProdQty"
+                        android:layout_marginLeft="20dp"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:id="@+id/imgGift"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/ic_baseline_card_giftcard_24" />
+
+                <Button
+                    android:id="@+id/btnAddToCart"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="Quantity" />
-
-                <EditText
-                    android:id="@+id/prodQty"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:background="@drawable/texbox"
-                    android:hint="item quantity"
-                    android:inputType="number"
-                    android:padding="5dp"
-                    android:text="1"
-                    android:textAlignment="center"
-                    android:textSize="14dp"/>
+                    android:layout_toRightOf="@+id/imgGift"
+                    android:background="@color/darkgrey"
+                    android:text="Add to cart"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/btnBuyProduct"
-                    android:layout_width="120dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
                     android:layout_marginTop="10dp"
+                    android:layout_toRightOf="@id/btnAddToCart"
                     android:background="@color/colorApp"
                     android:text="Buy"
                     android:textColor="@color/white" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
-</ScrollView>
+
+    </ScrollView>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorApp"
+        android:layout_below="@id/scrView"
+        android:layout_marginTop="5dp"
         android:text="@string/footer"
         android:textAlignment="center"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/scrView"/>
+        android:textColor="@color/colorApp"
+        android:visibility="gone" />
 </LinearLayout>

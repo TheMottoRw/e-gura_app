@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.e.gura.R;
 
 public class SliderAdapter extends PagerAdapter {
@@ -33,6 +35,14 @@ public class SliderAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         ImageView imageView = new ImageView(mContext);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        Glide.with(mContext)
+                    .load(imgArr[position])
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
+                    .centerCrop()
+                    .error(R.drawable.ic_baseline_image_24) //error
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(imageView);
         imageView.setImageURI(Uri.parse(imgArr[position].toString()
         ));
 //        imageView.setImageResource(imgArr[position]);
