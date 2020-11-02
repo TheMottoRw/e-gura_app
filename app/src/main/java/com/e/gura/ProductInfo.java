@@ -109,7 +109,7 @@ public class ProductInfo extends AppCompatActivity {
                 else {
                     try {
                         JSONObject obj = new JSONObject(data.getStringExtra("product"));
-                        if (!helper.isLoggedIn())
+                        if (helper.isLoggedIn())
                             addToCart(obj.getString("product_id"), prodQty.getText().toString().trim());
                         else {
                             Toast.makeText(getApplicationContext(),"You should login first",Toast.LENGTH_LONG).show();
