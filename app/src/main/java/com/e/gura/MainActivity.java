@@ -131,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
                                 loginIntent = new Intent(MainActivity.this,Profile.class);
                                 loginIntent.putExtra("profile","");
                             } else if(intent.hasExtra("cart")){
+                                loginIntent = new Intent(MainActivity.this,Navigator.class);
+                                loginIntent.putExtra("cart","go to cart");
+                            } else if(intent.hasExtra("product_info")){
                                 loginIntent = new Intent(MainActivity.this,ProductInfo.class);
                                 loginIntent.putExtra("product",getIntent().getStringExtra("product"));
                             } else {

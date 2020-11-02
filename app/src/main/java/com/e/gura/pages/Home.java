@@ -45,6 +45,7 @@ import com.e.gura.adapters.HorizontalCategoryAdapter;
 import com.e.gura.adapters.ProductAdapter;
 import com.e.gura.adapters.SliderAdapter;
 import com.google.android.material.snackbar.Snackbar;
+import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -81,7 +82,7 @@ public class Home extends Fragment {
     LinearLayout sliderDotspanel;
     private int dotscount;
     private ImageView[] dots;
-
+    public RotateLoading rotateLoading;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,7 +120,8 @@ public class Home extends Fragment {
         layoutManager = new LinearLayoutManager(ctx, LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-
+        rotateLoading = view.findViewById(R.id.loading);
+        rotateLoading.start();
         mQueue = Volley.newRequestQueue(ctx);
         progressBar = new ProgressDialog(ctx);
         progressBar.setMessage("Loading products...");
@@ -320,6 +322,7 @@ public class Home extends Fragment {
     }
 
     private void loadSlider(String[] arr) {
+        if(rotateLoading.isStart()) rotateLoading.stop();
         final SliderAdapter adapterView = new SliderAdapter(ctx, arr);
         mViewPager.setAdapter(adapterView);
 

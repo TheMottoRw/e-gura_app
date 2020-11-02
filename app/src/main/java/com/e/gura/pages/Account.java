@@ -171,9 +171,12 @@ public class Account extends Fragment {
     }
     void setLoadedProfile(JSONObject obj){
         try{
-            tvName.setText(obj.getString("user_fname")+" "+obj.getString("user_lname"));
-            tvPhone.setText(obj.getString("user_email"));
-            tvRegdate.setText(obj.getString("user_date").substring(0,10));
+            if(obj.has("user_fname") && obj.has("user_lname") && obj.has("user_email")) {
+                String names = obj.getString("user_fname") + " " + obj.getString("user_lname");
+                tvName.setText(names);
+                tvPhone.setText(obj.getString("user_email"));
+                tvRegdate.setText(obj.getString("user_date").substring(0, 10));
+            }
         }catch (JSONException ex){
             Log.d("Json debug",ex.getMessage());
         }

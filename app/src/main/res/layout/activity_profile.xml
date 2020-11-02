@@ -45,7 +45,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="7dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/logo_egura" />
+            android:background="@drawable/logo" />
         <TextView
             android:id="@+id/tvNoInternet"
             android:layout_width="match_parent"

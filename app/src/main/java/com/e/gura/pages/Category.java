@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ import com.e.gura.adapters.HorizontalCategoryAdapter;
 import com.e.gura.R;
 import com.e.gura.adapters.CategoryAdapter;
 import com.google.android.material.snackbar.Snackbar;
+import com.victor.loading.rotate.RotateLoading;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,6 +49,7 @@ public class Category extends Fragment {
     public Context ctx;
     private JSONArray productsArray, searchedCategoriesArray, allCategoryArray;
     public int len, lastCount = 0, defaultCount = 75, loopStop = 0, page = 0, delay = 1000;
+    public RotateLoading rotateLoading;
 
     public Category() {
         // Required empty public constructor
@@ -61,6 +64,8 @@ public class Category extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(layoutManager);
+        rotateLoading = view.findViewById(R.id.loading);
+        rotateLoading.start();
 
         Thread t = new Thread(new Runnable() {
             @Override
@@ -80,35 +85,37 @@ public class Category extends Fragment {
         edtKeyword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                
+
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                
+
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().length()>=2) {
+                if (s.toString().length() >= 2) {
                     searchInArray(s + "");
-                } else if(s.toString().length() == 0) setLoadedCategories("all");
+                } else if (s.toString().length() == 0) setLoadedCategories("all");
             }
         });
     }
 
     private void loadCategories() {
         String url = "https://mobile.e-gura.com/main/view.php?andr_categories_list";
-        Log.d("RequestStart",url);
+        Log.d("RequestStart", url);
         mQueue = Volley.newRequestQueue(ctx);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.d("response", response.toString());
+                        if (rotateLoading.isStart()) rotateLoading.stop();
+
                         //Log.e("escaper", res.replace("\\", ""));
                         try {
-                            Log.d("Category","Set adapter");
+                            Log.d("Category", "Set adapter");
                             //set products' category to recyclerview
                             allCategoryArray = new JSONArray(response);
                             adapter = new CategoryAdapter(ctx, allCategoryArray);
@@ -122,6 +129,7 @@ public class Category extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (rotateLoading.isStart()) rotateLoading.stop();
                 error.printStackTrace();
             }
         });
@@ -131,6 +139,7 @@ public class Category extends Fragment {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         mQueue.add(request);
     }
+
     private void searchInArray(String keyword) {
         searchedCategoriesArray = new JSONArray();
         if (allCategoryArray.length() == 0)

@@ -66,9 +66,6 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
             holder.tvCategoryName.setText(currentObj.getString("sub_cat_name"));
             holder.tvCategoryId.setText(currentObj.getString("sub_cat_id"));
             //set image icons
-//            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
-//            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
-            //set image icons
             Glide.with(ctx)
                     .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
                     .placeholder(R.drawable.ic_baseline_image_24) //placeholder
