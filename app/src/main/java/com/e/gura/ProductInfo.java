@@ -95,10 +95,9 @@ public class ProductInfo extends AppCompatActivity {
         btnBuyProduct = findViewById(R.id.btnBuyProduct);
 
         progressDialog = new ProgressDialog(ProductInfo.this);
-        progressDialog.setMessage("Loading images...");
         /*progressDialog.setProgress(0);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);*/
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
 
         data = getIntent();
         btnAddToCart.setOnClickListener(new View.OnClickListener() {
@@ -170,7 +169,7 @@ public class ProductInfo extends AppCompatActivity {
         relativeLayoutGoToProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProductInfo.this, Profile.class));
+                //startActivity(new Intent(ProductInfo.this, Profile.class));
             }
         });
 
@@ -273,15 +272,17 @@ public class ProductInfo extends AppCompatActivity {
         }
     }
 
-    public void addToCart(String product, String quantity) {
+    public void addToCart(final String product, String quantity) {
+        progressDialog.setMessage("Adding product to cart...");
+        progressDialog.show();
+
         String url = "https://mobile.e-gura.com/js/ajax/main.php?and_2_add_to_cart&user_id=" + helper.getUserId() + "&prid=" + product + "&prqnntty=" + quantity;
-        Log.d("add to cart", "URL " + url);
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("add to cart", "Response " + response);
+                progressDialog.dismiss();
                 if (response.equals("login")) {
                     //redirect to login page
                     Intent intent = new Intent(ProductInfo.this, MainActivity.class);
@@ -302,7 +303,7 @@ public class ProductInfo extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("request error", error.getMessage());
+                progressDialog.dismiss();
                 //Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
             }
         }) {

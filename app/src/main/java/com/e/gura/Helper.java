@@ -60,7 +60,6 @@ public class Helper {
         try {
             if(userData.equals("0")) return obj;
             obj = new JSONObject(userData).getJSONArray("andr_user_login").getJSONObject(0);
-            Log.d("debug user profile",obj.toString());
         } catch (JSONException ex) {
 
         }
@@ -69,6 +68,14 @@ public class Helper {
 
     public boolean hasAccount() {
         return ctx.getSharedPreferences("uinfo", Context.MODE_PRIVATE).getBoolean("has_account", false);
+    }
+    public boolean hasPopped(){
+        return ctx.getSharedPreferences("uinfo", Context.MODE_PRIVATE).getBoolean("has_popped", false);
+    }
+    public void setPopped(boolean status){
+        SharedPreferences.Editor sharedPreferences = ctx.getSharedPreferences("uinfo", Context.MODE_PRIVATE).edit();
+        sharedPreferences.putBoolean("has_popped",status);
+        sharedPreferences.apply();
     }
     public boolean isLoggedIn(){
         return getUserProfile() != null;

@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +35,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.e.gura.Helper;
-import com.e.gura.MainActivity;
-import com.e.gura.Profile;
+import com.e.gura.LoginPopup;
 import com.e.gura.R;
-import com.e.gura.UploadProduct;
+import com.e.gura.adapters.CategoryAdapter;
 import com.e.gura.adapters.HorizontalCategoryAdapter;
 import com.e.gura.adapters.ProductAdapter;
 import com.e.gura.adapters.SliderAdapter;
+import com.e.gura.utils.DummyData;
 import com.google.android.material.snackbar.Snackbar;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -83,6 +81,7 @@ public class Home extends Fragment {
     private int dotscount;
     private ImageView[] dots;
     public RotateLoading rotateLoading;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -121,27 +120,44 @@ public class Home extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         rotateLoading = view.findViewById(R.id.loading);
-        rotateLoading.start();
         mQueue = Volley.newRequestQueue(ctx);
         progressBar = new ProgressDialog(ctx);
         progressBar.setMessage("Loading products...");
         progressBar.setCancelable(true);
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadCategories();
-                setProductsUrl("all","0");
-            }
-        });
-        t.start();
 
 
         //Image slider
         mViewPager = (ViewPager) view.findViewById(R.id.viewPager);
         sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
         sliderImageArray = new String[7];
-        populateSlider();
+
+        if (helper.isNetworkConnected()) {
+            rotateLoading.start();
+
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loadCategories();
+                    Bundle bundle = getArguments()!=null?getArguments():new Bundle();
+                    if(bundle.containsKey("subcategory"))
+                        setProductsUrl("product_based_subcategory",bundle.getString("subcategory"));
+                    else setProductsUrl("all", "0");
+                }
+            });
+            t.start();
+
+            populateSlider();
+        } else {
+            rotateLoading.setVisibility(View.GONE);
+            HorizontalCategoryAdapter cateAdapter = new HorizontalCategoryAdapter(ctx, DummyData.getCategoryDummies());
+            recyclerView.setAdapter(cateAdapter);
+            ProductAdapter productAdapter = new ProductAdapter(ctx, DummyData.getProductsDummies());
+            gridRecyclerView.setAdapter(productAdapter);
+            loadSlider(DummyData.getSlider());
+        }
+        //popup login for the first time
+        if (!helper.hasAccount())
+            if (!helper.hasPopped()) startActivity(new Intent(ctx, LoginPopup.class));
 
         return view;
     }
@@ -164,8 +180,8 @@ public class Home extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().length()>=3) searchInArray(s+"");
-                else if(s.toString().length() == 0) setLoadedProducts("all");
+                if (s.toString().length() >= 3) searchInArray(s + "");
+                else if (s.toString().length() == 0) setLoadedProducts("all");
             }
         });
     }
@@ -174,9 +190,6 @@ public class Home extends Fragment {
         return 100 * (lastCount / loopStop);
     }
 
-    public void loadProfile() {
-        startActivity(new Intent(ctx, Profile.class));
-    }
 
     public void setProductsUrl(String by, String id) {
         String url = "";
@@ -193,7 +206,7 @@ public class Home extends Fragment {
                 loadProductsToSearchIn();//loading products used to search in
                 break;
             case "product_based_subcategory":
-                url = "https://mobile.e-gura.com/main/view.php?andr_sub_categories_on_cat&category=2";
+                url = "https://mobile.e-gura.com/main/view.php?andr_products_on_sub_cat="+id;
                 break;
             case "search":
                 progressBar.setMessage("Searching...");
@@ -212,8 +225,6 @@ public class Home extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("response", response.toString());
-                        //Log.e("escaper", res.replace("\\", ""));
                         try {
                             //JSONObject response = new JSONObject(res.replace("\\", ""));
                             gridLayout.removeAllViews();
@@ -223,7 +234,7 @@ public class Home extends Fragment {
                                 imgLoading.setVisibility(View.GONE);
                             }
 //                            if (!activity.getIntent().hasExtra("category"))
-                                allProductArray = productsArray;
+                            allProductArray = productsArray;
                             len = productsArray.length();
                             loopStop = len > defaultCount ? defaultCount : len;
                             setLoadedProducts("all");
@@ -231,7 +242,6 @@ public class Home extends Fragment {
                             //end of custom setloaded product */
                             progressBar.dismiss();
                         } catch (JSONException e) {
-                            Log.d("JSON Error", e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -249,20 +259,16 @@ public class Home extends Fragment {
     }
 
     public void loadProductsToSearchIn() {
-        Log.d("prod to search in", "Query runned");
         String localUrl = "https://e-gura.com/main/view.php?and_products_imgs";
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, localUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("prod to search in resp", response.toString());
-                        //Log.e("escaper", res.replace("\\", ""));
                         try {
                             if (response.has("and_products_imgs"))
                                 allProductArray = response.getJSONArray("and_products_imgs");
                         } catch (JSONException e) {
-                            Log.d("JSON Error", e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -284,14 +290,13 @@ public class Home extends Fragment {
         if (allProductArray.length() == 0)
             Snackbar.make(loadMore, "No products found", Snackbar.LENGTH_LONG).show();
         else {
-            Log.d("all prod array", allProductArray.toString());
             for (int i = 0; i < allProductArray.length(); i++) {
                 try {
                     JSONObject obj = allProductArray.getJSONObject(i);
                     if (obj.getString("product_name").toLowerCase().contains(keyword.toLowerCase()) || obj.getString("product_descr").toLowerCase().contains(keyword))
                         searchedProductsArray.put(obj);
                 } catch (JSONException ex) {
-                    Log.d("json err", ex.getMessage());
+
                 }
             }
             //set loaded products to recylerview
@@ -306,23 +311,22 @@ public class Home extends Fragment {
         if (loadType.equals("all")) dataArray = productsArray;
         else if (loadType.equals("search")) dataArray = searchedProductsArray;
         loopStop = dataArray.length() > defaultCount ? defaultCount : dataArray.length();
-        Log.d("display data ", loadType + " - " + dataArray.toString());
 
         ProductAdapter productAdapter = new ProductAdapter(ctx, dataArray);
         gridRecyclerView.setAdapter(productAdapter);
     }
 
     private void populateSlider() {
-            String sliderUrl = "https://mobile.e-gura.com/img/";
-            int loopLen = 7;
-            for (int i = 1; i <= loopLen; i++) {
-                    sliderImageArray[(i-1)] = sliderUrl+i+".jpg";
-            }
-            loadSlider(sliderImageArray);
+        String sliderUrl = "https://mobile.e-gura.com/img/";
+        int loopLen = 7;
+        for (int i = 1; i <= loopLen; i++) {
+            sliderImageArray[(i - 1)] = sliderUrl + i + ".jpg";
+        }
+        loadSlider(sliderImageArray);
     }
 
     private void loadSlider(String[] arr) {
-        if(rotateLoading.isStart()) rotateLoading.stop();
+        if (rotateLoading.isStart()) rotateLoading.stop();
         final SliderAdapter adapterView = new SliderAdapter(ctx, arr);
         mViewPager.setAdapter(adapterView);
 
@@ -330,7 +334,7 @@ public class Home extends Fragment {
         dotscount = adapterView.getCount();
         dots = new ImageView[dotscount];
 
-        for(int i = 0; i < dotscount; i++){
+        for (int i = 0; i < dotscount; i++) {
 
             dots[i] = new ImageView(ctx);
             dots[i].setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.non_active_dot));
@@ -370,7 +374,7 @@ public class Home extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 page = position;
-                for(int i = 0; i< dotscount; i++){
+                for (int i = 0; i < dotscount; i++) {
                     dots[i].setImageDrawable(ContextCompat.getDrawable(ctx, R.drawable.non_active_dot));
                 }
 
@@ -397,17 +401,16 @@ public class Home extends Fragment {
                         try {
                             //load all products
                             // Toast.makeText(home.this,String.valueOf(getIntent().hasExtra("category")),Toast.LENGTH_SHORT).show();
-                            if (    bundle!= null)
-                                if(!bundle.getString("subcategory","0").equals("0"))
+                            if (bundle != null)
+                                if (!bundle.getString("subcategory", "0").equals("0"))
                                     setProductsUrl("product_based_category", bundle.getString("subcategory"));
-                            else setProductsUrl("all", "0");
+                                else setProductsUrl("all", "0");
 
                             //set products' category to recyclerview
                             adapter = new HorizontalCategoryAdapter(ctx, response.getJSONArray("all_categories"));
                             recyclerView.setAdapter(adapter);
                             // progressBar.dismiss();
                         } catch (JSONException e) {
-                            Log.d("JSON Error", e.getMessage());
                             e.printStackTrace();
                         }
                     }

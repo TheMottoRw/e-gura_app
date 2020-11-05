@@ -39,9 +39,21 @@
             android:text="."
             android:textColor="@color/darkgrey" />
 
+        <TextView
+            android:id="@+id/tvNoInternet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No internet connection"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorApp"
+            android:gravity="center"
+            android:visibility="gone"/>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:clickable="true"/>
     </LinearLayout>
 </RelativeLayout>

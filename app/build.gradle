@@ -45,7 +45,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     //circular image
     implementation 'com.mikhaellopez:circularimageview:3.2.0'
-    implementation 'de.hdodenhof:circleimageview:1.2.1'
     //loading
     implementation 'com.victor:lib:1.0.4'
     testImplementation 'junit:junit:4.12'

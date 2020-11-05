@@ -23,8 +23,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e.gura.Helper;
 import com.e.gura.R;
+import com.e.gura.adapters.CategoryAdapter;
 import com.e.gura.adapters.SubCategoryAdapter;
+import com.e.gura.utils.DummyData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,23 +35,29 @@ import org.json.JSONObject;
 
 public class Subcategory extends AppCompatActivity {
 
+    public TextView tvNoInternet;
     private RequestQueue mQueue;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private SubCategoryAdapter adapter;
     public Context ctx;
+    private Helper helper;
     //redesign feature
     private ImageView goBack;
     private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subcategory);
+        helper = new Helper(getApplicationContext());
 
         recyclerView = findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         goBack = findViewById(R.id.goBack);
+        tvNoInternet = findViewById(R.id.tvNoInternet);
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,15 +68,24 @@ public class Subcategory extends AppCompatActivity {
                 finish();
             }
         });
-        loadSubcategories();
+
+        //network connectivity
+        helper.toggleNetworkConnectivityTextView(tvNoInternet);
+        if (helper.isNetworkConnected()) {
+            loadSubcategories();
+        }
+        else{
+            SubCategoryAdapter adapter = new SubCategoryAdapter(getApplicationContext(), DummyData.getCategoryDummies());
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     public void loadSubcategories() {
         Intent intent = getIntent();
 
-        if(intent.hasExtra("category")) {
+        if (intent.hasExtra("category")) {
             toolbar.setTitle(intent.getStringExtra("category"));
-            String url = "https://mobile.e-gura.com/main/view.php?andr_sub_categories_on_cat&category="+intent.getStringExtra("category");
+            String url = "https://mobile.e-gura.com/main/view.php?andr_sub_categories_on_cat&category=" + intent.getStringExtra("category");
             mQueue = Volley.newRequestQueue(getApplicationContext());
 
             StringRequest request = new StringRequest(Request.Method.GET, url,
@@ -83,7 +101,6 @@ public class Subcategory extends AppCompatActivity {
                                 recyclerView.setAdapter(adapter);
                                 // progressBar.dismiss();
                             } catch (JSONException e) {
-                                Log.d("JSON Error", e.getMessage());
                                 e.printStackTrace();
                             }
                         }

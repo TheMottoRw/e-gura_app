@@ -61,30 +61,32 @@
         android:layout_height="wrap_content"
         android:padding="30dp"
         >
+
+        <TextView
+            android:id="@+id/btnSignin"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:text="Signin"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:layout_marginLeft="20dp"
+            />
+
         <TextView
             android:id="@+id/signintext"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Register"
             android:textColor="@color/white"
-            android:textSize="30dp"
+            android:textSize="24dp"
             android:background="@color/colorApp"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:paddingBottom="10dp"
             android:layout_marginTop="-10dp"
-            android:paddingTop="10dp"/>
+            android:paddingTop="10dp"
+            android:layout_toRightOf="@id/btnSignin"/>
 
-        <TextView
-            android:id="@+id/btnSignin"
-            android:layout_width="fill_parent"
-            android:layout_height="50dp"
-            android:layout_toRightOf="@id/signintext"
-            android:text="Signin"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:layout_marginLeft="30dp"
-            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

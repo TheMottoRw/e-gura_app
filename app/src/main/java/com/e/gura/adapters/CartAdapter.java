@@ -104,13 +104,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                     dialog.setCancelable(false);
                     dialog.show();
                     String url = "https://mobile.e-gura.com/js/ajax/main.php?remove_in_cart_andr_2&cart_id="+cartId;
-                    Log.d("add to cart","URL "+url);
 
                     RequestQueue requestQueue = Volley.newRequestQueue(ctx);
                     StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            Log.d("add to cart","Response "+response);
                             dialog.dismiss();
                             if(response.trim().equals("\"success\"")) {
                                 Toast.makeText(ctx, "Product removed from cart", Toast.LENGTH_LONG).show();
@@ -124,7 +122,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.MyViewHolder> 
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             dialog.dismiss();
-                            Log.d("request error",error.getMessage());
                             //Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
                         }
                     }) {

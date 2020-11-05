@@ -61,7 +61,7 @@
                 android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
-                android:background="@color/colorAccent"
+                android:background="@color/light_rose"
                 android:text="Logout"
                 android:textColor="@color/white" />
         </LinearLayout>

@@ -177,7 +177,6 @@ public class UploadProduct extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("response", response.toString());
                         //set products' category to spinner
                         setLoadedProductCategories(response);
                     }
@@ -206,7 +205,6 @@ public class UploadProduct extends AppCompatActivity {
             ArrayAdapter adapter = new ArrayAdapter(UploadProduct.this, android.R.layout.simple_spinner_item, dataName);
             spnCategory.setAdapter(adapter);
         } catch (JSONException e) {
-            Log.d("JSON Error", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -234,7 +232,6 @@ public class UploadProduct extends AppCompatActivity {
                 if (data.getData() != null) {
 
                     Uri mImageUri = data.getData();
-                    Log.d("Image uri", mImageUri.toString());
 
                     // Get the cursor
                     Cursor cursor = getContentResolver().query(mImageUri,
@@ -247,7 +244,6 @@ public class UploadProduct extends AppCompatActivity {
                     cursor.close();
 
                     mArrayUri.add(mImageUri);
-                    Log.d("Image uri", mArrayUri.toString());
                     galleryAdapter = new GalleryAdapter(UploadProduct.this, mArrayUri);
                     gvGallery.setAdapter(galleryAdapter);
                     gvGallery.setVerticalSpacing(gvGallery.getHorizontalSpacing());
@@ -296,7 +292,6 @@ public class UploadProduct extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
-            Log.d("choose image gallery", e.getMessage());
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_LONG)
                     .show();
         }
@@ -329,7 +324,6 @@ public class UploadProduct extends AppCompatActivity {
 
     public void uploadImage(View v) {
         // When Image is selected from Gallery
-        Log.d("Image counts", "Selected Images " + path.size());
         if (path.size() != 0) {
            // prgDialog.setMessage("Converting Image to Binary Data");
             //prgDialog.show();

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +32,7 @@ import com.e.gura.adapters.CategoryAdapter;
 import com.e.gura.adapters.HorizontalCategoryAdapter;
 import com.e.gura.R;
 import com.e.gura.adapters.CategoryAdapter;
+import com.e.gura.utils.DummyData;
 import com.google.android.material.snackbar.Snackbar;
 import com.victor.loading.rotate.RotateLoading;
 
@@ -38,9 +40,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import retrofit2.http.HEAD;
+
 
 public class Category extends Fragment {
-
+    private TextView tvNoInternet;
     private Helper helper;
     private RequestQueue mQueue;
     private RecyclerView recyclerView;
@@ -61,19 +65,30 @@ public class Category extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_category, container, false);
         ctx = view.getContext();
+        helper = new Helper(ctx);
         recyclerView = view.findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(layoutManager);
+        tvNoInternet = view.findViewById(R.id.tvNoInternet);
         rotateLoading = view.findViewById(R.id.loading);
-        rotateLoading.start();
 
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                loadCategories();
-            }
-        });
-        t.start();
+        //network connectivity
+        helper.toggleNetworkConnectivityTextView(tvNoInternet);
+
+        if (helper.isNetworkConnected()){;
+            rotateLoading.start();
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    loadCategories();
+                }
+            });
+            t.start();
+        } else{
+            CategoryAdapter adapter = new CategoryAdapter(ctx, DummyData.getCategoryDummies());
+            recyclerView.setAdapter(adapter);
+        }
+
 
         return view;
     }
@@ -104,25 +119,20 @@ public class Category extends Fragment {
 
     private void loadCategories() {
         String url = "https://mobile.e-gura.com/main/view.php?andr_categories_list";
-        Log.d("RequestStart", url);
         mQueue = Volley.newRequestQueue(ctx);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("response", response.toString());
                         if (rotateLoading.isStart()) rotateLoading.stop();
 
-                        //Log.e("escaper", res.replace("\\", ""));
                         try {
-                            Log.d("Category", "Set adapter");
                             //set products' category to recyclerview
                             allCategoryArray = new JSONArray(response);
                             adapter = new CategoryAdapter(ctx, allCategoryArray);
                             recyclerView.setAdapter(adapter);
                             // progressBar.dismiss();
                         } catch (JSONException e) {
-                            Log.d("JSON Error", e.getMessage());
                             e.printStackTrace();
                         }
                     }
@@ -145,14 +155,13 @@ public class Category extends Fragment {
         if (allCategoryArray.length() == 0)
             Snackbar.make(recyclerView, "No products found", Snackbar.LENGTH_LONG).show();
         else {
-            Log.d("all prod array", allCategoryArray.toString());
             for (int i = 0; i < allCategoryArray.length(); i++) {
                 try {
                     JSONObject obj = allCategoryArray.getJSONObject(i);
                     if (obj.getString("cat_name").toLowerCase().contains(keyword.toLowerCase()))
                         searchedCategoriesArray.put(obj);
                 } catch (JSONException ex) {
-                    Log.d("json err", ex.getMessage());
+
                 }
             }
             //set loaded products to recylerview
@@ -167,7 +176,6 @@ public class Category extends Fragment {
         if (loadType.equals("all")) dataArray = allCategoryArray;
         else if (loadType.equals("search")) dataArray = searchedCategoriesArray;
         loopStop = dataArray.length() > defaultCount ? defaultCount : dataArray.length();
-        Log.d("display data ", loadType + " - " + dataArray.toString());
 
         CategoryAdapter categoryAdapter = new CategoryAdapter(ctx, dataArray);
         recyclerView.setAdapter(categoryAdapter);

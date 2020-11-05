@@ -53,7 +53,6 @@ public class GridviewAdapter extends BaseAdapter {
     public LinearLayout getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         String imgUrl = "";
-        Log.d("Adapter grid","Started getview");
         DisplayMetrics display  = ctx.getResources().getDisplayMetrics();
         int dispWidth = display.widthPixels/3,dispHeight = display.heightPixels/3;
         int width = 230, height = 230;

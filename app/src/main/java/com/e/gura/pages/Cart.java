@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -34,6 +35,7 @@ import com.e.gura.MainActivity;
 import com.e.gura.R;
 import com.e.gura.adapters.CartAdapter;
 import com.e.gura.adapters.ProductAdapter;
+import com.e.gura.utils.DummyData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.victor.loading.rotate.RotateLoading;
@@ -56,6 +58,7 @@ public class Cart extends Fragment {
     public JSONArray searchedProductsArray,allProductArray;
     public RotateLoading rotateLoading;
     public FloatingActionButton fab;
+    public TextView tvNoInternet;
     public Cart() {
         // Required empty public constructor
     }
@@ -71,24 +74,38 @@ public class Cart extends Fragment {
         layoutManager = new LinearLayoutManager(ctx);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
+        tvNoInternet = view.findViewById(R.id.tvNoInternet);
         fab = view.findViewById(R.id.checkout);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ctx, Browser.class);
-                intent.putExtra("url","https://mobile.e-gura.com/main/view.php?andr_final_cart&user_id="+helper.getUserId());
-                startActivity(intent);
+                if(helper.isNetworkConnected()) {
+                    Intent intent = new Intent(ctx, Browser.class);
+                    intent.putExtra("url", "https://mobile.e-gura.com/main/view.php?andr_final_cart&user_id=" + helper.getUserId());
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(ctx,"You need internet connection to checkout",Toast.LENGTH_LONG).show();
+                }
             }
         });
+
         rotateLoading = view.findViewById(R.id.loading);
-        rotateLoading.start();
-        if(helper.isLoggedIn())
-            loadCart();
-        else{
-            Toast.makeText(ctx,"You should login first",Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(ctx, MainActivity.class);
-            intent.putExtra("cart","go to cart");
-            startActivity(intent);
+
+        //network connectivity
+        helper.toggleNetworkConnectivityTextView(tvNoInternet);
+        if(helper.isNetworkConnected()) {
+            rotateLoading.start();
+            if (helper.isLoggedIn())
+                loadCart();
+            else {
+                Toast.makeText(ctx, "You should login first", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(ctx, MainActivity.class);
+                intent.putExtra("cart", "go to cart");
+                startActivity(intent);
+            }
+        }else{
+            CartAdapter adapter = new CartAdapter(ctx, DummyData.getCartDummies());
+            recyclerView.setAdapter(adapter);
         }
         return view;
     }
@@ -122,14 +139,12 @@ public class Cart extends Fragment {
         if (allProductArray.length() == 0)
             Snackbar.make(recyclerView, "No products found", Snackbar.LENGTH_LONG).show();
         else {
-            Log.d("all prod array", allProductArray.toString());
             for (int i = 0; i < allProductArray.length(); i++) {
                 try {
                     JSONObject obj = allProductArray.getJSONObject(i);
                     if (obj.getString("product_name").toLowerCase().contains(keyword.toLowerCase()) || obj.getString("product_descr").toLowerCase().contains(keyword))
                         searchedProductsArray.put(obj);
                 } catch (JSONException ex) {
-                    Log.d("json err", ex.getMessage());
                 }
             }
             //set loaded products to recylerview
@@ -142,7 +157,6 @@ public class Cart extends Fragment {
 
         if (loadType.equals("all")) dataArray = allProductArray;
         else if (loadType.equals("search")) dataArray = searchedProductsArray;
-        Log.d("display data ", loadType + " - " + dataArray.toString());
 
         CartAdapter productAdapter = new CartAdapter(ctx, dataArray);
         recyclerView.setAdapter(productAdapter);
@@ -151,13 +165,11 @@ public class Cart extends Fragment {
     public void loadCart() {
 
         String url = "https://mobile.e-gura.com/main/view.php?andr_my_cart&user_id="+helper.getUserId();
-        Log.d("cart url",url);
         mQueue = Volley.newRequestQueue(ctx);
         StringRequest request = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("cart response", response.toString());
 
                         if(rotateLoading.isStart()) rotateLoading.stop();
 
@@ -172,7 +184,6 @@ public class Cart extends Fragment {
                                 //JSONObject response = new JSONObject(res.replace("\\", ""));
 
                             } catch (JSONException e) {
-                                Log.d("JSON Error", e.getMessage());
                                 e.printStackTrace();
                             }
                         }

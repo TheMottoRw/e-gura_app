@@ -65,7 +65,6 @@ public class HorizontalCategoryAdapter extends RecyclerView.Adapter<HorizontalCa
             //set image icons
 //            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
 //            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
-            Log.d("CateIcon","https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"));
             Glide.with(ctx)
                     .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
                     .placeholder(R.drawable.ic_baseline_image_24) //placeholder

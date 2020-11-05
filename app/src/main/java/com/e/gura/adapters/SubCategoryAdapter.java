@@ -49,7 +49,7 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
                                                            int viewType) {
         // create a new view
         v = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_categories, parent, false);
+                .inflate(R.layout.recycler_subcategories, parent, false);
         SubCategoryAdapter.MyViewHolder vh = new SubCategoryAdapter.MyViewHolder(v);
         return vh;
     }
@@ -65,40 +65,14 @@ public class SubCategoryAdapter extends RecyclerView.Adapter<SubCategoryAdapter.
             //Toast.makeText(ctx,currentObj.getString("cat_name")+"-"+currentObj.getString("cat_id"),Toast.LENGTH_SHORT).show();
             holder.tvCategoryName.setText(currentObj.getString("sub_cat_name"));
             holder.tvCategoryId.setText(currentObj.getString("sub_cat_id"));
-            //set image icons
-            Glide.with(ctx)
-                    .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
-                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
-                    .centerCrop()
-                    .error(R.drawable.ic_baseline_image_24) //error
-                    .into(holder.imgCategoryIcon);
-            holder.tvCategoryName.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("ClickDebug","Debug in adapter");
-                    Toast.makeText(ctx,"Opening modal",Toast.LENGTH_SHORT).show();
-                }
-            });
-            // holder.imgCategoryIcon.setImageBitmap(null);
+
             holder.lnlayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    Toast.makeText(ctx,"Open filter",Toast.LENGTH_SHORT).show();
-                    Log.d("ClickDebug","Debug in adapter");
-                    Intent intent = new Intent(ctx, Navigator.class);
+                public void onClick(View v) {
+                    Intent intent = new Intent(ctx,Navigator.class);
                     intent.putExtra("subcategory",holder.tvCategoryId.getText().toString());
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     ctx.startActivity(intent);
-
-                    //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();
-                }
-            });
-            holder.lnlayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Log.d("ClickDebug","Layout touched");
-                    Toast.makeText(ctx,"Touched",Toast.LENGTH_SHORT).show();
-                    return false;
                 }
             });
 

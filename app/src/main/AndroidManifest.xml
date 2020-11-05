@@ -17,7 +17,11 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:icon">
-        <activity android:name=".Browser"></activity>
+        <activity android:name=".LoginPopup"
+            android:theme="@style/Theme.AppCompat.Dialog">
+        </activity>
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".Browser" />
         <activity android:name=".pages.Subcategory" />
         <activity android:name=".Navigator">
             <intent-filter>
@@ -29,7 +33,6 @@
         <activity android:name=".ImageUpload" />
         <activity android:name=".UploadProduct" />
         <activity android:name=".ProductInfo" />
-        <activity android:name=".Profile" />
         <activity android:name=".signup" />
         <activity android:name=".MainActivity" />
     </application>
