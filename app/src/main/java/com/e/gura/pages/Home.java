@@ -138,10 +138,6 @@ public class Home extends Fragment {
                 @Override
                 public void run() {
                     loadCategories();
-                    Bundle bundle = getArguments()!=null?getArguments():new Bundle();
-                    if(bundle.containsKey("subcategory"))
-                        setProductsUrl("product_based_subcategory",bundle.getString("subcategory"));
-                    else setProductsUrl("all", "0");
                 }
             });
             t.start();
@@ -206,7 +202,8 @@ public class Home extends Fragment {
                 loadProductsToSearchIn();//loading products used to search in
                 break;
             case "product_based_subcategory":
-                url = "https://mobile.e-gura.com/main/view.php?andr_products_on_sub_cat="+id;
+                url = "https://mobile.e-gura.com/main/view.php?andr_products_on_sub_cat&sub_category=" + id;
+                Log.d("Request cateURL", url);
                 break;
             case "search":
                 progressBar.setMessage("Searching...");
@@ -221,6 +218,7 @@ public class Home extends Fragment {
     }
 
     public void loadProducts(String url) {
+        Log.d("Requested url", url);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -402,8 +400,8 @@ public class Home extends Fragment {
                             //load all products
                             // Toast.makeText(home.this,String.valueOf(getIntent().hasExtra("category")),Toast.LENGTH_SHORT).show();
                             if (bundle != null)
-                                if (!bundle.getString("subcategory", "0").equals("0"))
-                                    setProductsUrl("product_based_category", bundle.getString("subcategory"));
+                                if (bundle.containsKey("subcategory"))
+                                    setProductsUrl("product_based_subcategory", bundle.getString("subcategory"));
                                 else setProductsUrl("all", "0");
 
                             //set products' category to recyclerview
