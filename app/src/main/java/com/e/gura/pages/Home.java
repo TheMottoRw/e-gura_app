@@ -403,6 +403,7 @@ public class Home extends Fragment {
                                 if (bundle.containsKey("subcategory"))
                                     setProductsUrl("product_based_subcategory", bundle.getString("subcategory"));
                                 else setProductsUrl("all", "0");
+                            else setProductsUrl("all", "0");
 
                             //set products' category to recyclerview
                             adapter = new HorizontalCategoryAdapter(ctx, response.getJSONArray("all_categories"));
