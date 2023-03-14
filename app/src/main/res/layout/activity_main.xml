@@ -6,54 +6,93 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="#fff">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="100dp"
-       android:background="@drawable/bg"
-       android:id="@+id/tophead">
-       <RelativeLayout
-           android:id="@+id/rltLayoutMenu"
-           android:layout_width="25dp"
-           android:layout_height="20dp"
-           android:background="@drawable/vector"
-           android:layout_alignParentRight="true"
-           android:layout_alignParentTop="true"
-           android:layout_marginTop="20dp"
-           android:layout_marginRight="20dp"
-       />
-       <RelativeLayout
-           android:id="@+id/rltLayoutLogo"
-            android:layout_width="120dp"
-            android:layout_height="50dp"
-           android:layout_alignParentBottom="true"
-           android:layout_alignParentLeft="true"
-           android:layout_marginLeft="10dp"
-           android:layout_marginTop="50dp"
-           android:background="@drawable/logo_egura"
-           />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
 
-       <TextView
-           android:id="@+id/tvNoInternet"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:text="No internet connection"
-           android:layout_below="@+id/rltLayoutLogo"
-           android:layout_marginTop="-5dp"
-           android:textColor="@color/colorApp"
-           android:paddingLeft="10dp"
-           android:visibility="gone"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-   </RelativeLayout>
+            <ImageView
+                android:id="@+id/goBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:rotationY="180"
+                android:src="@drawable/ic_baseline_arrow_forward_ios_24" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_marginLeft="50dp"/>
+        </RelativeLayout>
+    </androidx.appcompat.widget.Toolbar>
+        <TextView
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:background="@drawable/toolbar_design"
+            android:text="."
+            android:textColor="@color/darkgrey" />
+        <TextView
+            android:id="@+id/tvNoInternet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-5dp"
+            android:background="@drawable/toolbar_design"
+            android:text="."
+            android:textColor="@color/darkgrey"
+            android:visibility="gone"/>
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
     <RelativeLayout
         android:id="@+id/loginLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tophead"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="60dp"
         android:padding="30dp"
         android:visibility="visible"
         >
+        <TextView
+            android:id="@+id/tvRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:textColor="#000"
+            android:textSize="30dp"/>
+
+        <Button
+            android:id="@+id/btnSignin"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:layout_toRightOf="@id/tvRegister"
+            android:background="@color/colorApp"
+            android:text="Signin"
+            android:textColor="@color/white"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="-10dp"
+            android:paddingTop="5dp"
+            />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,6 +100,8 @@
             android:textColor="#000"
             android:textSize="20dp"
             android:id="@+id/signintext"
+            android:layout_below="@id/tvRegister"
+            android:layout_marginTop="20dp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -78,7 +119,7 @@
             android:layout_marginTop="30dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:hint="phone number"
+            android:hint="Phone"
             android:id="@+id/edtPhone"/>
         <EditText
             android:layout_width="match_parent"
@@ -95,7 +136,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:background="@drawable/btn"
+            android:background="@color/colorApp"
             android:text="Sign In"
             android:textColor="#ffffff"
             android:layout_below="@+id/passwordinput"
@@ -105,9 +146,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="#fff"
-            android:text="forgot password?"
+            android:text="Forgot password?"
             android:textAllCaps="false"
-            android:textColor="#CC361F"
+            android:textColor="@color/darkgrey"
             android:gravity="center"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/signbtn"
@@ -189,4 +230,6 @@
         android:textAlignment="center"
         android:layout_marginTop="5dp"
         android:layout_alignParentBottom="true"/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

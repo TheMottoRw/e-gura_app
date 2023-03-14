@@ -1,4 +1,22 @@
 <resources>
-    <string name="app_name">Gura</string>
+    <string name="app_name">E-Gura</string>
     <string name="footer">Powered by E-gura Ltd !</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_category">Category</string>
+    <string name="title_cart">Cart</string>
+    <string name="title_account">Account</string>
+    <string name="title_erent">E-Rent</string>
+
+    <!-- header -->
+    <string name="signin">Signin</string>
+    <string name="joinhere">Join here</string>
+    <string name="buygura">Buy/Gura</string>
+    <string name="sellgurisha">Sell/Gurisha</string>
+    <string name="buyandsell">Buy and Sell</string>
+    <string name="upload">Upload product</string>
+    <string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

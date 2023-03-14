@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -45,21 +46,34 @@ import pl.droidsonroids.gif.GifImageView;
 
 public class ProductInfo extends AppCompatActivity {
     private Helper helper;
-    private TextView prodName, prodPu, prodSize, prodColor, prodChipping,loading,tvNoInternet;
+    private TextView prodName, prodPu, prodSize, prodColor, prodChipping, loading, tvNoInternet;
     private EditText prodQty;
     private ImageView[] img;
     private Button btnBuyProduct;
-    private int targetImgView = 0,prodImgLen;
+    private int targetImgView = 0, prodImgLen;
     private Intent data;
     public ProgressDialog progressDialog;
-    private ImageView imgUpload,img1,img2,img3;
+    private ImageView imgUpload, img1, img2, img3;
     private GifImageView imgLoading;
-    private RelativeLayout rltLayoutLogo,relativeLayoutGoToProfile;
+    private RelativeLayout rltLayoutLogo, relativeLayoutGoToProfile;
+    //redesign feature
+    private ImageView goBack;
+    private TextView toCart;
+    private Button btnAddToCart;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_info);
+        //Redesign feature
+        //Customer toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        goBack = findViewById(R.id.goBack);
+        toCart = findViewById(R.id.toCart);
+        btnAddToCart = findViewById(R.id.btnAddToCart);
+
+        //end redesign feature
         helper = new Helper(ProductInfo.this);
 
         tvNoInternet = findViewById(R.id.tvNoInternet);
@@ -80,26 +94,70 @@ public class ProductInfo extends AppCompatActivity {
         loading = findViewById(R.id.loading);
         btnBuyProduct = findViewById(R.id.btnBuyProduct);
 
-        progressDialog  =new ProgressDialog(ProductInfo.this);
-        progressDialog.setMessage("Loading images...");
+        progressDialog = new ProgressDialog(ProductInfo.this);
         /*progressDialog.setProgress(0);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);*/
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
 
         data = getIntent();
+        btnAddToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (prodQty.getText().toString().trim().equals("") || prodQty.getText().toString().trim().equals("0"))
+                    Snackbar.make(prodQty, "Quantity should be a number greater than 0", Snackbar.LENGTH_LONG).show();
+                else {
+                    try {
+                        JSONObject obj = new JSONObject(data.getStringExtra("product"));
+                        if (helper.isLoggedIn())
+                            addToCart(obj.getString("product_id"), prodQty.getText().toString().trim());
+                        else {
+                            Toast.makeText(getApplicationContext(),"You should login first",Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ProductInfo.this, MainActivity.class);
+                            intent.putExtra("product", data.getStringExtra("product"));
+                            intent.putExtra("product_info", "login");
+                            startActivity(intent);
+                        }
+                    } catch (JSONException ex) {
+
+                    }
+                }
+            }
+        });
+        toCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ProductInfo.this, Navigator.class);
+                intent.putExtra("cart", "go to cart");
+                startActivity(intent);
+            }
+        });
+        goBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         btnBuyProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(prodQty.getText().toString().trim().equals("") || prodQty.getText().toString().trim().equals("0"))
-                    Snackbar.make(prodQty,"Quantity should be a number greater than 0",Snackbar.LENGTH_LONG).show();
-                else
-                paymentRequest();
+                if (helper.isLoggedIn()) {
+                    if (prodQty.getText().toString().trim().equals("") || prodQty.getText().toString().trim().equals("0"))
+                        Snackbar.make(prodQty, "Quantity should be a number greater than 0", Snackbar.LENGTH_LONG).show();
+                    else
+                        paymentRequest();
+                } else {
+                    Intent intent = new Intent(ProductInfo.this, MainActivity.class);
+                    intent.putExtra("product_info", "go to cart");
+                    intent.putExtra("product", data.getStringExtra("product"));
+                    startActivity(intent);
+                }
             }
         });
         imgUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProductInfo.this,UploadProduct.class));
+                startActivity(new Intent(ProductInfo.this, UploadProduct.class));
             }
         });
         rltLayoutLogo.setOnClickListener(new View.OnClickListener() {
@@ -111,41 +169,41 @@ public class ProductInfo extends AppCompatActivity {
         relativeLayoutGoToProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProductInfo.this,Profile.class));
+                //startActivity(new Intent(ProductInfo.this, Profile.class));
             }
         });
 
         try {
             JSONObject obj = new JSONObject(data.getStringExtra("product"));
             prodName.setText(obj.getString("product_name"));
-            prodPu.setText(obj.getString("product_price")+" RWF");
-            prodChipping.setText("Shipping fee: " + obj.getString("product_chipping"));
-            prodColor.setText("Color: " + obj.getString("product_color"));
-            prodSize.setText("Size:" + obj.getString("product_size"));
+            prodPu.setText(obj.getString("product_price") + " RWF");
+            prodChipping.setText(obj.getString("product_chipping"));
+            prodColor.setText(obj.getString("product_color"));
+            prodSize.setText(obj.getString("product_size"));
             img = new ImageView[]{};
             //show loading products
-           // loading.setVisibility(View.VISIBLE);
-            prodImgLen = obj.has("product_file_3")?3:(obj.has("product_file_2")?2:1);
+            // loading.setVisibility(View.VISIBLE);
+            prodImgLen = obj.has("product_file_3") ? 3 : (obj.has("product_file_2") ? 2 : 1);
             progressDialog.setMax(prodImgLen);
-           // progressDialog.show();
+            // progressDialog.show();
             imgLoading.setVisibility(View.GONE);
             Glide.with(ProductInfo.this)
                     .load(obj.getString("product_file"))
-                    .placeholder(R.drawable.logo_egura) //placeholder
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
-                    .error(R.drawable.logo_egura) //error
+                    .error(R.drawable.ic_baseline_image_24) //error
                     .into(img1);
             Glide.with(ProductInfo.this)
                     .load(obj.getString("product_file_2"))
-                    .placeholder(R.drawable.logo_egura) //placeholder
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
-                    .error(R.drawable.logo_egura) //error
+                    .error(R.drawable.ic_baseline_image_24) //error
                     .into(img2);
             Glide.with(ProductInfo.this)
                     .load(obj.getString("product_file_3"))
-                    .placeholder(R.drawable.logo_egura) //placeholder
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
                     .centerCrop()
-                    .error(R.drawable.logo_egura) //error
+                    .error(R.drawable.ic_baseline_image_24) //error
                     .into(img3);
 
                 /*for (int i = 0; i < 3; i++) {
@@ -162,18 +220,18 @@ public class ProductInfo extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         helper.toggleNetworkConnectivityTextView(tvNoInternet);
     }
 
-    void paymentRequest(){
-        String url = "https://e-gura.com/main/view.php?andr_proceed_with_pay_pr_details&user_id"+helper.getUserId()+"&product_id=";
+    void paymentRequest() {
+        String url = "https://e-gura.com/main/view.php?andr_proceed_with_pay_pr_details&user_id" + helper.getUserId() + "&product_id=";
         try {
             //opening browser
             JSONObject obj = new JSONObject(data.getStringExtra("product"));
             url += obj.getString("product_id");
-            url+="&quantity="+prodQty.getText().toString();
+            url += "&quantity=" + prodQty.getText().toString();
             //send product request to pay
             RequestQueue requestQueue = Volley.newRequestQueue(this);
             StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -197,7 +255,7 @@ public class ProductInfo extends AppCompatActivity {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("request error",error.getMessage());
+                    Log.d("request error", error.getMessage());
                     //Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
                 }
             }) {
@@ -212,5 +270,49 @@ public class ProductInfo extends AppCompatActivity {
         } catch (JSONException ex) {
 
         }
+    }
+
+    public void addToCart(final String product, String quantity) {
+        progressDialog.setMessage("Adding product to cart...");
+        progressDialog.show();
+
+        String url = "https://mobile.e-gura.com/js/ajax/main.php?and_2_add_to_cart&user_id=" + helper.getUserId() + "&prid=" + product + "&prqnntty=" + quantity;
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialog.dismiss();
+                if (response.equals("login")) {
+                    //redirect to login page
+                    Intent intent = new Intent(ProductInfo.this, MainActivity.class);
+                    intent.putExtra("action", "login");
+                    startActivity(intent);
+                } else if (response.trim().equals("\"success\""))
+                    Toast.makeText(getApplicationContext(), "Product added to cart", Toast.LENGTH_LONG).show();
+                else if (response.trim().equals("\"arleady\""))
+                    Toast.makeText(getApplicationContext(), "Product already exist to cart", Toast.LENGTH_LONG).show();
+                else if (response.trim().equals("\"unvailable\""))
+                    Toast.makeText(getApplicationContext(), "Can't add product to cart,product not exist", Toast.LENGTH_LONG).show();
+                else if (response.trim().equals("\"failed\""))
+                    Toast.makeText(getApplicationContext(), "Failed to add product to cart", Toast.LENGTH_LONG).show();
+                else
+                    Toast.makeText(getApplicationContext(), "Something went wrong " + response, Toast.LENGTH_LONG).show();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
+                //Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }

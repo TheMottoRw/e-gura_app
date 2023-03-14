@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".pages.Cart"
+    android:layout_gravity="center">
+
+    <include layout="@layout/loading" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvNoInternet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No internet connection"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorApp"
+            android:gravity="center"
+            android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_below="@id/tvNoInternet"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/checkout"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginRight="30dp"
+        android:src="@drawable/ic_baseline_payment_24"
+        app:backgroundTint="@color/white"
+        app:fabSize="auto"
+        />
+
+    </RelativeLayout>
+</FrameLayout>

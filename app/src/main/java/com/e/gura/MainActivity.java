@@ -1,5 +1,6 @@
 package com.e.gura;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e.gura.pages.Home;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,10 +30,11 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     EditText eml, pss, edtEmail, edtResetPhone;
     Button lgn, sgnup, forgot, buttonBackToLogin, btnResetButton;
-    TextView resp, tvNoInternet;
+    TextView resp, tvNoInternet,tvRegister;
     private Helper helper;
     private Intent intent;
-    private RelativeLayout loginLayout, resetLayout,rltLayoutLogo,rltLayoutMenu;
+    private RelativeLayout loginLayout, resetLayout;
+    private ProgressDialog pgdialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +48,7 @@ public class MainActivity extends AppCompatActivity {
         sgnup = (Button) findViewById(R.id.newaccountss);
         resp = (TextView) findViewById(R.id.resp_view);
         forgot = findViewById(R.id.forgot);
-        rltLayoutLogo = findViewById(R.id.rltLayoutLogo);
-        rltLayoutMenu = findViewById(R.id.rltLayoutMenu);
-        rltLayoutLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        rltLayoutMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        tvRegister = findViewById(R.id.tvRegister);
         //reset password
         edtResetPhone = findViewById(R.id.resetPhone);
         btnResetButton = findViewById(R.id.resetButton);
@@ -66,10 +56,21 @@ public class MainActivity extends AppCompatActivity {
         loginLayout = findViewById(R.id.loginLayout);
         resetLayout = findViewById(R.id.resetLayout);
         buttonBackToLogin = findViewById(R.id.buttonBackToLogin);
+        //loading dialog
+        pgdialog = new ProgressDialog(this);
+        pgdialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pgdialog.setMessage("Please wait..l");
+        pgdialog.setCancelable(false);
 
         //check if comes from stage of buying
         intent = getIntent();
 
+        tvRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,signup.class));
+            }
+        });
         lgn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Login() {
+        pgdialog.show();
         String url = "https://e-gura.com/js/ajax/main.php";
         if (helper.isNetworkConnected()) {
             if (eml.getText().toString().equals("") || pss.getText().toString().equals("")) {
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("Login response: ", response);
+                        pgdialog.dismiss();
                         if (!response.trim().equals("failed")) {
                             helper.setUserInfo(response);
                             Intent loginIntent;
@@ -141,20 +143,27 @@ public class MainActivity extends AppCompatActivity {
                             } else if (intent.hasExtra("upload")) {
                                 loginIntent = new Intent(MainActivity.this, UploadProduct.class);
                             } else if(intent.hasExtra("profile")){
-                                loginIntent = new Intent(MainActivity.this,Profile.class);
+                                loginIntent = new Intent(MainActivity.this,Navigator.class);
+                                loginIntent.putExtra("profile","");
+                            } else if(intent.hasExtra("cart")){
+                                loginIntent = new Intent(MainActivity.this,Navigator.class);
+                                loginIntent.putExtra("cart","go to cart");
+                            } else if(intent.hasExtra("product_info")){
+                                loginIntent = new Intent(MainActivity.this,ProductInfo.class);
+                                loginIntent.putExtra("product",getIntent().getStringExtra("product"));
                             } else {
-                                loginIntent = new Intent(MainActivity.this, home.class);
+                                loginIntent = new Intent(MainActivity.this, Navigator.class);
                             }
                             finish();
                             startActivity(loginIntent);
                         } else {
                             Toast.makeText(getApplicationContext(), "Failed to login", Toast.LENGTH_LONG).show();
                         }
-
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        pgdialog.dismiss();
                         Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -176,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void reset() {
+        pgdialog.setMessage("Resetting password...");
         String url = "https://e-gura.com/js/ajax/main.php?andr_reset_pass&user_email=" + edtEmail.getText().toString().trim();
         if (helper.isNetworkConnected()) {
             if (eml.getText().toString().equals("") || pss.getText().toString().equals("")) {
@@ -185,10 +195,11 @@ public class MainActivity extends AppCompatActivity {
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        pgdialog.dismiss();
                         if (!response.trim().equals("failed")) {
                             helper.setUserInfo(response);
                             Toast.makeText(MainActivity.this, "Password changed,login again...", Toast.LENGTH_LONG).show();
-                            Intent loginIntent = new Intent(MainActivity.this, home.class);
+                            Intent loginIntent = new Intent(MainActivity.this, Home.class);
                             startActivity(loginIntent);
                         } else {
                             Toast.makeText(MainActivity.this, "Failed To Login", Toast.LENGTH_LONG).show();
@@ -198,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        pgdialog.dismiss();
                         Toast.makeText(getApplicationContext(), "This Error has found : " + error.toString(), Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -212,5 +224,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }

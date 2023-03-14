@@ -2,6 +2,7 @@ package com.e.gura;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.e.gura.pages.Home;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,10 +29,11 @@ import java.util.Map;
 public class signup extends AppCompatActivity {
     Button sngBtn;
     EditText fname, lname, email, npass, cpass;
-    TextView sgnview;
+    TextView sgnview,btnSignin;
     private Intent intent;
     private Helper helper;
-    private RelativeLayout rltvLayoutLogo,rltvLayoutMenu;
+    private RelativeLayout rltvLayoutLogo;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,22 +46,20 @@ public class signup extends AppCompatActivity {
         npass = (EditText) findViewById(R.id.passwordinput);
         cpass = (EditText) findViewById(R.id.cpasswordinput);
         sgnview = (TextView) findViewById(R.id.acc_login);
-        rltvLayoutMenu = findViewById(R.id.rltLayoutMenu);
-        rltvLayoutLogo = findViewById(R.id.rltLayoutLogo);
+        btnSignin = findViewById(R.id.btnSignin);
 
-        rltvLayoutLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        rltvLayoutMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Creating your account...");
+        progressDialog.setCancelable(false);
+
         helper = new Helper(signup.this);
+
+        btnSignin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         sngBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,19 +84,20 @@ public class signup extends AppCompatActivity {
         });
     }
     private void SignUp(){
+        progressDialog.show();
         String url = "https://e-gura.com/js/ajax/main.php?user_signup_andr=true&and_fname="+fname.getText().toString().trim()+"&and_lname="+lname.getText().toString().trim()+"&and_email="+email.getText().toString().trim()+"&and_npass="+npass.getText().toString().trim()+"&and_cpass="+cpass.getText().toString().trim();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d("Signup response",response);
+                progressDialog.dismiss();
                 if (response.trim().length()>30){
                     Intent loginIntent ;
                     if(intent.hasExtra("uri")) {
                         loginIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(intent.getStringExtra("uri")));
-                        startActivity(new Intent(signup.this,home.class));
+                        startActivity(new Intent(signup.this, Home.class));
                     } else {
-                        loginIntent = new Intent(signup.this,home.class);
+                        loginIntent = new Intent(signup.this, Home.class);
                     }
                     //save users session
                     helper.setUserInfo(response);
@@ -114,6 +116,7 @@ public class signup extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 Toast.makeText(signup.this, "This Error has found : "+error.toString(), Toast.LENGTH_LONG).show();
             }
         }) {

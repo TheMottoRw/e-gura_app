@@ -1,33 +1,33 @@
-package com.e.gura;
+package com.e.gura.adapters;
+
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.e.gura.Helper;
+import com.e.gura.R;
+import com.e.gura.pages.Home;
+import com.e.gura.pages.Subcategory;
+import com.mikhaellopez.circularimageview.CircularImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 
-
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyViewHolder> {
     public LinearLayout v;
     public Context ctx;
     public Helper helper;
@@ -35,7 +35,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     private JSONArray mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(Context context, JSONArray myDataset) {
+    public CategoryAdapter(Context context, JSONArray myDataset) {
         mDataset = myDataset;
         ctx = context;
         helper = new Helper(ctx);
@@ -43,19 +43,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                     int viewType) {
+    public CategoryAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                int viewType) {
         // create a new view
         v = (LinearLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.recycler_product_category, parent, false);
-        MyViewHolder vh = new MyViewHolder(v);
+                .inflate(R.layout.recycler_categories, parent, false);
+        CategoryAdapter.MyViewHolder vh = new CategoryAdapter.MyViewHolder(v);
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, int position) {
+    public void onBindViewHolder(final CategoryAdapter.MyViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         try {
@@ -63,18 +63,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             //Toast.makeText(ctx,currentObj.getString("cat_name")+"-"+currentObj.getString("cat_id"),Toast.LENGTH_SHORT).show();
             holder.tvCategoryName.setText(currentObj.getString("cat_name"));
             holder.tvCategoryId.setText(currentObj.getString("cat_id"));
-            //set image icons
-            if(position%2 != 0) holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.black_product_icon));
-            else holder.imgCategoryIcon.setImageDrawable(ctx.getDrawable(R.mipmap.product_icon));
-           // holder.imgCategoryIcon.setImageBitmap(null);
-            holder.imgCategoryIcon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(ctx,home.class);
-                    intent.putExtra("category",holder.tvCategoryId.getText().toString());
-                    ctx.startActivity(intent);
 
-                  //  Toast.makeText(ctx,"Category "+holder.tvCategoryName.getText().toString()+" - Id "+holder.tvCategoryId.getText().toString(),Toast.LENGTH_SHORT).show();
+            Glide.with(ctx)
+                    .load("https://mobile.e-gura.com/img/categories/"+currentObj.getString("cat_icon"))
+                    .placeholder(R.drawable.ic_baseline_image_24) //placeholder
+                    .centerCrop()
+                    .error(R.drawable.ic_baseline_image_24) //error
+                    .into(holder.imgCategoryIcon);
+
+            holder.lnlayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(ctx, Subcategory.class);
+                    intent.putExtra("category",holder.tvCategoryId.getText().toString());
+                    intent.putExtra("category_name",holder.tvCategoryId.getText().toString());
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    ctx.startActivity(intent);
                 }
             });
 
@@ -96,51 +100,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         public TextView tvCategoryName,tvCategoryId;
-        public ImageView imgCategoryIcon;
+        public CircularImageView imgCategoryIcon;
         public LinearLayout lnlayout;
 
         public MyViewHolder(LinearLayout lny) {
             super(lny);
-            lnlayout = lny.findViewById(R.id.singleProductHolder1);
-            imgCategoryIcon = lny.findViewById(R.id.cateIcon);
-            tvCategoryName = lny.findViewById(R.id.cateName);
-            tvCategoryId = lny.findViewById(R.id.cateId);
+            lnlayout = lny.findViewById(R.id.lnySubcategory);
+            imgCategoryIcon = lny.findViewById(R.id.categoryIcon);
+            tvCategoryName = lny.findViewById(R.id.categoryName);
+            tvCategoryId = lny.findViewById(R.id.categoryId);
             //tvMsg = lny.findViewById(R.id.tvRecyclerDate);
         }
-    }
-}
-
-class Background extends AsyncTask<String, Void, Bitmap> {
-    private Bitmap bm;
-    private InputStream is;
-    private BufferedInputStream bis;
-    private Exception exception;
-    private String img;
-
-    protected Bitmap doInBackground(String... urls) {
-        try {
-            URL aURL = new URL(urls[0]);
-            img = urls[1];
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-            return bm;
-        } catch (Exception e) {
-            this.exception = e;
-
-            return null;
-        } finally {
-
-        }
-    }
-
-    protected void onPostExecute(Bitmap feed) {
-        int width = 230, height = 230;
-
     }
 }
 
